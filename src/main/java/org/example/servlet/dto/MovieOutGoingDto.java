@@ -1,6 +1,5 @@
 package org.example.servlet.dto;
 
-import org.example.model.ActorEntity;
 import org.example.model.GenreEntity;
 
 import java.util.ArrayList;

@@ -2,7 +2,6 @@ package org.example.repository.impl;
 
 import org.example.db.ConnectionManagerImpl;
 import org.example.model.ActorEntity;
-import org.example.model.GenreEntity;
 import org.example.repository.ActorEntityRepository;
 import org.example.repository.ActorToMovieEntityRepository;
 import org.example.repository.SQLQuery.ActorSQLQuery;
@@ -12,7 +11,6 @@ import org.example.repository.mapper.impl.ActorResultSetMapperImpl;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class ActorEntityRepositoryImpl implements ActorEntityRepository {
     ConnectionManagerImpl connectionManager = new ConnectionManagerImpl();
@@ -48,7 +46,6 @@ public class ActorEntityRepositoryImpl implements ActorEntityRepository {
             int affectedRows = preparedStatement.executeUpdate();
 
             result =  affectedRows > 0;
-            boolean isReferenceDeleted = actorToMovieEntityRepository.deleteByActorId(id);
         } catch (SQLException e) {
             throw new RuntimeException("Error deleting actor by id" + e.getMessage(), e);
         }

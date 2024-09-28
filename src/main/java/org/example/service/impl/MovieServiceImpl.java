@@ -24,18 +24,6 @@ public class MovieServiceImpl implements MovieService {
     private MovieDtoMapper movieDtoMapper = new MovieDtoMapperImpl();
     private ActorToMovieEntityRepository actorToMovieRepository = new ActorToMovieEntityRepositoryImpl();
 
-    public void setMovieRepository(MovieEntityRepository movieRepository) {
-        this.movieRepository = movieRepository;
-    }
-    public void setActorToMovieRepository(ActorToMovieEntityRepository actorToMovieRepository) {
-        this.actorToMovieRepository = actorToMovieRepository;
-    }
-    public void setMovieDtoMapper(MovieDtoMapper movieDtoMapper) {
-        this.movieDtoMapper = movieDtoMapper;
-    }
-    public void setActorDtoMapper(ActorDtoMapper actorDtoMapper) {
-        this.actorDtoMapper = actorDtoMapper;
-    }
 
     @Override
     public List<MovieOutGoingDto> findAll(){
@@ -78,7 +66,6 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public boolean delete(Long id) throws NotFoundException {
         exists(id);
-//        actorToMovieRepository.deleteByMovieId(id);
         return movieRepository.deleteById(id);
     }
 

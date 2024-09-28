@@ -4,15 +4,11 @@ import org.example.model.MovieEntity;
 import org.example.servlet.dto.ActorLimitedDto;
 import org.example.servlet.dto.MovieIncomingDto;
 import org.example.servlet.dto.MovieOutGoingDto;
-import org.example.servlet.mapper.ActorDtoMapper;
-import org.example.servlet.mapper.GenreDtoMapper;
 import org.example.servlet.mapper.MovieDtoMapper;
 
 import java.util.List;
 
 public class MovieDtoMapperImpl implements MovieDtoMapper {
-    GenreDtoMapper genreDtoMapper = new GenreDtoMapperImpl();
-    ActorDtoMapper actorDtoMapper = new ActorDtoMapperImpl();
 
     @Override
     public MovieEntity map(MovieIncomingDto incomingDto) {

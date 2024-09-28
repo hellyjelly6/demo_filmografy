@@ -1,10 +1,6 @@
 package org.example.servlet.dto;
 
-import org.example.model.MovieEntity;
-
-import java.util.ArrayList;
 import java.sql.Date;
-import java.util.List;
 
 public class ActorIncomingDto {
     private String firstName;

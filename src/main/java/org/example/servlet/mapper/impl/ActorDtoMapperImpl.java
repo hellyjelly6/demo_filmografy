@@ -9,7 +9,6 @@ import org.example.servlet.mapper.ActorDtoMapper;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ActorDtoMapperImpl implements ActorDtoMapper {
     @Override
@@ -63,6 +62,6 @@ public class ActorDtoMapperImpl implements ActorDtoMapper {
     public List<ActorEntity> map(ActorLimitedDto[] actorIncomingDtos) {
         return Arrays.stream(actorIncomingDtos)
                 .map(this::map)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

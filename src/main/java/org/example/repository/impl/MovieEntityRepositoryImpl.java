@@ -137,7 +137,7 @@ public class MovieEntityRepositoryImpl implements MovieEntityRepository {
         } catch (SQLException e) {
             throw new RuntimeException("Error checking movie exists", e);
         }
-        return false;
+        return isExists;
     }
 
     @Override

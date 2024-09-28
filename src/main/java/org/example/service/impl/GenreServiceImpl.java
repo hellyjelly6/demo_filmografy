@@ -19,19 +19,8 @@ import java.util.List;
 public class GenreServiceImpl implements GenreService {
    private GenreEntityRepository genreEntityRepository = new GenreEntityRepositoryImpl(new ConnectionManagerImpl(), new GenreResultSetMapperImpl());
    private GenreDtoMapper genreDtoMapper = new GenreDtoMapperImpl();
-   private MovieEntityRepository movieEntityRepository = new MovieEntityRepositoryImpl();
 
-    public void setGenreDtoMapper(GenreDtoMapper genreDtoMapper) {
-        this.genreDtoMapper = genreDtoMapper;
-    }
-    public void setGenreEntityRepository(GenreEntityRepository genreEntityRepository) {
-        this.genreEntityRepository = genreEntityRepository;
-    }
-    public void setMovieEntityRepository(MovieEntityRepository movieEntityRepository) {
-        this.movieEntityRepository = movieEntityRepository;
-    }
 
-    public GenreServiceImpl() {}
 
     @Override
     public List<GenreOutGoingDto> findAll() {
@@ -65,7 +54,6 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public boolean delete(Long id) throws NotFoundException {
         exists(id);
-//        movieEntityRepository.deleteConstraintByGenreId(id);
         return genreEntityRepository.deleteById(id);
     }
 

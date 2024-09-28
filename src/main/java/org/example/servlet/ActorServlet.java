@@ -20,13 +20,12 @@ import java.util.List;
 
 @WebServlet(urlPatterns = {"/actor/*"})
 public class ActorServlet extends HttpServlet {
-    ActorService actorService = new ActorServiceImpl();
-    Gson gson = new GsonBuilder()
+    transient ActorService actorService = new ActorServiceImpl();
+    transient Gson gson = new GsonBuilder()
             .registerTypeAdapter(java.sql.Date.class, new SqlDateDeserializer()) // Десериализация
             .registerTypeAdapter(java.sql.Date.class, new SqlDateSerializer())   // Сериализация
             .create();
 
-    public ActorServlet() {}
 
     public void setActorService(ActorService actorService) {
         this.actorService = actorService;
@@ -82,7 +81,7 @@ public class ActorServlet extends HttpServlet {
             response = e.getMessage();
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response = "Bad Request: "+e.getMessage();
+            response = "Bad Request: %s".formatted(e.getMessage());
         }
         PrintWriter printWriter = resp.getWriter();
         printWriter.print(response);

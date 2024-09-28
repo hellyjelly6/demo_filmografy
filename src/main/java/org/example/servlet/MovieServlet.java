@@ -1,7 +1,6 @@
 package org.example.servlet;
 
 import com.google.gson.Gson;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,10 +16,9 @@ import java.util.List;
 
 @WebServlet(urlPatterns = {"/movie/*"})
     public class MovieServlet extends HttpServlet {
-    private MovieService movieService = new MovieServiceImpl();
-    Gson gson = new Gson();
+    private transient MovieService movieService = new MovieServiceImpl();
+    transient Gson gson = new Gson();
 
-    public MovieServlet() {}
 
     public void setMovieService(MovieService movieService) {
         this.movieService = movieService;
@@ -73,7 +71,7 @@ import java.util.List;
             }
             else{
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response = "Illegal Request";
+                response = "Illegal Request, movie is null";
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

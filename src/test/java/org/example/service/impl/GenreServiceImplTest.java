@@ -42,10 +42,6 @@ class GenreServiceImplTest {
     void setUp() {
         // Инициализация моков
         closeable = MockitoAnnotations.openMocks(this);
-        genreService = new GenreServiceImpl();
-        genreService.setGenreEntityRepository(mockGenreEntityRepository);
-        genreService.setMovieEntityRepository(mockMovieEntityRepository);
-        genreService.setGenreDtoMapper(mockDtoMapper);
 
         genreIncomingDto = new GenreIncomingDto("genre1");
         genreEntity = new GenreEntity(1L, "genre1", List.of());
@@ -104,7 +100,7 @@ class GenreServiceImplTest {
     }
 
     @Test
-    void findByIdNotFound() throws NotFoundException {
+    void findByIdNotFound() {
         when(mockGenreEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> genreService.findById(1L));
@@ -150,7 +146,7 @@ class GenreServiceImplTest {
     }
 
     @Test
-    void updateNotFound() throws NotFoundException {
+    void updateNotFound() {
         when(mockGenreEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> genreService.update(genreIncomingDto, 1L));
@@ -170,12 +166,11 @@ class GenreServiceImplTest {
         assertTrue(result);
 
         verify(mockGenreEntityRepository).exists(1L);
-        //verify(mockMovieEntityRepository).deleteConstraintByGenreId(1L);
         verify(mockGenreEntityRepository).deleteById(1L);
     }
 
      @Test
-    void deleteNotFound() throws NotFoundException {
+    void deleteNotFound()  {
         when(mockGenreEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> genreService.delete(1L));

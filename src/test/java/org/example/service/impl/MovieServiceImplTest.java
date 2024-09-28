@@ -20,7 +20,6 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -50,11 +49,6 @@ class MovieServiceImplTest {
     @BeforeEach
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
-        movieService = new MovieServiceImpl();
-        movieService.setActorToMovieRepository(mockactorToMovieEntityRepository);
-        movieService.setActorDtoMapper(mockactorDtoMapper);
-        movieService.setMovieDtoMapper(mockmovieDtoMapper);
-        movieService.setMovieRepository(mockmovieEntityRepository);
 
         movieIncomingDto = new MovieIncomingDto("Титаник", 1997, new GenreEntity());
         movieEntity = new MovieEntity(1L, "Титаник", 1997, new GenreEntity(), List.of());
@@ -117,7 +111,7 @@ class MovieServiceImplTest {
     }
 
     @Test
-    void findByIdNotFound() throws NotFoundException {
+    void findByIdNotFound()  {
         when(mockmovieEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> movieService.findById(1L));
@@ -200,7 +194,7 @@ class MovieServiceImplTest {
     }
 
     @Test
-    void updateNotFound() throws NotFoundException {
+    void updateNotFound() {
         when(mockmovieEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> movieService.update(movieIncomingDto, 1L));
@@ -223,7 +217,7 @@ class MovieServiceImplTest {
     }
 
     @Test
-    void deleteNotFound() throws NotFoundException {
+    void deleteNotFound(){
         when(mockmovieEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> movieService.delete(1L));

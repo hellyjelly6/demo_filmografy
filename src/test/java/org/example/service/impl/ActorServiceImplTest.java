@@ -2,12 +2,10 @@ package org.example.service.impl;
 
 import org.example.exception.NotFoundException;
 import org.example.model.ActorEntity;
-import org.example.model.MovieEntity;
 import org.example.repository.ActorEntityRepository;
 import org.example.repository.ActorToMovieEntityRepository;
 import org.example.servlet.dto.ActorIncomingDto;
 import org.example.servlet.dto.ActorOutGoingDto;
-import org.example.servlet.dto.MovieOutGoingDto;
 import org.example.servlet.mapper.ActorDtoMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,10 +42,6 @@ class ActorServiceImplTest {
     @BeforeEach
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
-        actorService = new ActorServiceImpl();
-        actorService.setActorEntityRepository(mockActorEntityRepository);
-        actorService.setActorToMovieEntityRepository(mockActorToMovieEntityRepository);
-        actorService.setActorDtoMapper(mockActorDtoMapper);
 
         actorIncomingDto = new ActorIncomingDto("Эмилия", "Кларк", java.sql.Date.valueOf("1986-10-23") );
         actorEntity = new ActorEntity(1L, "Эмилия", "Кларк", java.sql.Date.valueOf("1986-10-23"), List.of());
@@ -106,7 +100,7 @@ class ActorServiceImplTest {
     }
 
     @Test
-    void findByIdNotFound() throws NotFoundException {
+    void findByIdNotFound(){
         when(mockActorEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> actorService.findById(1L));
@@ -156,7 +150,7 @@ class ActorServiceImplTest {
     }
 
     @Test
-    void updateNotFound() throws NotFoundException {
+    void updateNotFound()  {
         when(mockActorEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> actorService.update(actorIncomingDto, 1L));
@@ -175,12 +169,11 @@ class ActorServiceImplTest {
         assertTrue(result);
 
         verify(mockActorEntityRepository).exists(1L);
-        //verify(mockActorToMovieEntityRepository).deleteByActorId(1L);
         verify(mockActorEntityRepository).deleteById(1L);
     }
 
     @Test
-    void deleteNotFound() throws NotFoundException {
+    void deleteNotFound() {
         when(mockActorEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> actorService.delete(1L));

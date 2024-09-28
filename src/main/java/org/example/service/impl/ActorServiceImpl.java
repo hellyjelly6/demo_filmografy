@@ -19,15 +19,6 @@ public class ActorServiceImpl implements ActorService {
     ActorToMovieEntityRepository actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl();
     ActorDtoMapper actorDtoMapper = new ActorDtoMapperImpl();
 
-    public void setActorEntityRepository(ActorEntityRepository actorEntityRepository) {
-        this.actorEntityRepository = actorEntityRepository;
-    }
-    public void setActorToMovieEntityRepository(ActorToMovieEntityRepository actorToMovieEntityRepository) {
-        this.actorToMovieEntityRepository = actorToMovieEntityRepository;
-    }
-    public void setActorDtoMapper(ActorDtoMapper actorDtoMapper) {
-        this.actorDtoMapper = actorDtoMapper;
-    }
 
     @Override
     public List<ActorOutGoingDto> findAll() {
@@ -61,7 +52,6 @@ public class ActorServiceImpl implements ActorService {
     @Override
     public boolean delete(Long id) throws NotFoundException {
         exists(id);
-        //actorToMovieEntityRepository.deleteByActorId(id);
         return actorEntityRepository.deleteById(id);
     }
 
