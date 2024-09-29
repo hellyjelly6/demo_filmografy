@@ -13,9 +13,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActorEntityRepositoryImpl implements ActorEntityRepository {
-    ConnectionManagerImpl connectionManager = new ConnectionManagerImpl();
+    ConnectionManagerImpl connectionManager;
     ActorResultSetMapper actorResultSetMapper = new ActorResultSetMapperImpl();
     ActorToMovieEntityRepository actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl();
+
+    public ActorEntityRepositoryImpl() {
+        connectionManager = new ConnectionManagerImpl();
+    }
+
+    public ActorEntityRepositoryImpl(ConnectionManagerImpl connectionManager) {
+        this.connectionManager = connectionManager;
+    }
+
 
     @Override
     public ActorEntity findById(Long id) {

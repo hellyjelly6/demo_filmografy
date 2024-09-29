@@ -71,7 +71,7 @@ class ActorToMovieEntityRepositoryImplTest {
     @BeforeEach
     public void setUp() {
         ConnectionManagerImpl connectionManager = new ConnectionManagerImpl(dataSource);
-        actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl();
+        actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl(connectionManager);
     }
 
     @Test

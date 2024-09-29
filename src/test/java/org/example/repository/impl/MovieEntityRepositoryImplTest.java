@@ -73,7 +73,7 @@ class MovieEntityRepositoryImplTest {
     public void setUp() {
         genreEntityRepository = new GenreEntityRepositoryImpl();
         ConnectionManagerImpl connectionManager = new ConnectionManagerImpl(dataSource);
-        movieEntityRepository = new MovieEntityRepositoryImpl();
+        movieEntityRepository = new MovieEntityRepositoryImpl(connectionManager);
     }
 
     @Test

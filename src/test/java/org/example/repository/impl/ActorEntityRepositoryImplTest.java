@@ -70,7 +70,7 @@ class ActorEntityRepositoryImplTest {
     @BeforeEach
     public void setUp() {
         ConnectionManagerImpl connectionManager = new ConnectionManagerImpl(dataSource);
-        actorEntityRepository = new ActorEntityRepositoryImpl();
+        actorEntityRepository = new ActorEntityRepositoryImpl(connectionManager);
     }
 
     @Test

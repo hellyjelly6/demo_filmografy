@@ -22,9 +22,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActorToMovieEntityRepositoryImpl implements ActorToMovieEntityRepository {
-private final ConnectionManager connectionManager = new ConnectionManagerImpl();
+private ConnectionManager connectionManager;
 private final MovieResultSetMapper movieResultSetMapper = new MovieResultSetMapperImpl();
 private final ActorResultSetMapper actorResultSetMapper = new ActorResultSetMapperImpl();
+
+    public ActorToMovieEntityRepositoryImpl() {
+        connectionManager = new ConnectionManagerImpl();
+    }
+
+    public ActorToMovieEntityRepositoryImpl(ConnectionManagerImpl connectionManager) {
+        this.connectionManager = connectionManager;
+    }
+
 
     @Override
     public boolean deleteByMovieId(Long id) {
