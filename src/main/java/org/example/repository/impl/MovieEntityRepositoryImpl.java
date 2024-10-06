@@ -43,7 +43,7 @@ public class MovieEntityRepositoryImpl implements MovieEntityRepository {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){
-                movieEntity = resultSetMapper.map(resultSet);
+                movieEntity = resultSetMapper.map(resultSet, this.connectionManager);
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error finding movie by id", e);
@@ -75,7 +75,7 @@ public class MovieEntityRepositoryImpl implements MovieEntityRepository {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
-                movieEntities.add(resultSetMapper.map(resultSet));
+                movieEntities.add(resultSetMapper.map(resultSet, this.connectionManager));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error finding all movies", e);
@@ -165,7 +165,7 @@ public class MovieEntityRepositoryImpl implements MovieEntityRepository {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
-                moviesList.add(resultSetMapper.map(resultSet));
+                moviesList.add(resultSetMapper.map(resultSet, this.connectionManager));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error finding all movies by actor id", e);

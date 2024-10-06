@@ -79,7 +79,7 @@ public class ActorToMovieEntityRepositoryImpl implements ActorToMovieEntityRepos
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
-                moviesList.add(movieResultSetMapper.map(resultSet));
+                moviesList.add(movieResultSetMapper.map(resultSet, this.connectionManager));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error finding all movies by actor id", e);

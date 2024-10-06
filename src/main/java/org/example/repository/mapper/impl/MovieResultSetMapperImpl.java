@@ -14,9 +14,9 @@ import java.sql.SQLException;
 public class MovieResultSetMapperImpl implements MovieResultSetMapper {
 
     @Override
-    public MovieEntity map(ResultSet resultSet) throws SQLException {
+    public MovieEntity map(ResultSet resultSet, ConnectionManager connectionManager) throws SQLException {
 
-        GenreEntityRepository genreRepository = new GenreEntityRepositoryImpl();
+        GenreEntityRepository genreRepository = new GenreEntityRepositoryImpl(connectionManager);
         Long movieId = resultSet.getLong("id");
         GenreEntity genreEntity = genreRepository.findById(resultSet.getLong("genre_id"));
 
