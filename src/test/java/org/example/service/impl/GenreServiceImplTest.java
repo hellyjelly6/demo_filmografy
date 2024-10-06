@@ -42,7 +42,7 @@ class GenreServiceImplTest {
     void setUp() {
         // Инициализация моков
         closeable = MockitoAnnotations.openMocks(this);
-        genreService = new GenreServiceImpl(mockGenreEntityRepository, mockDtoMapper, mockMovieEntityRepository);
+        genreService = new GenreServiceImpl(mockGenreEntityRepository, mockDtoMapper);
 
         genreIncomingDto = new GenreIncomingDto("genre1");
         genreEntity = new GenreEntity(1L, "genre1", List.of());

@@ -3,9 +3,7 @@ package org.example.service.impl;
 import org.example.exception.NotFoundException;
 import org.example.model.GenreEntity;
 import org.example.repository.GenreEntityRepository;
-import org.example.repository.MovieEntityRepository;
 import org.example.repository.impl.GenreEntityRepositoryImpl;
-import org.example.repository.impl.MovieEntityRepositoryImpl;
 import org.example.service.GenreService;
 import org.example.servlet.dto.GenreIncomingDto;
 import org.example.servlet.dto.GenreOutGoingDto;
@@ -17,18 +15,15 @@ import java.util.List;
 public class GenreServiceImpl implements GenreService {
     private GenreEntityRepository genreEntityRepository;
     private GenreDtoMapper genreDtoMapper;
-    private MovieEntityRepository movieEntityRepository;
 
     public GenreServiceImpl() {
         genreEntityRepository = new GenreEntityRepositoryImpl();
         genreDtoMapper = new GenreDtoMapperImpl();
-        movieEntityRepository = new MovieEntityRepositoryImpl();
     }
 
-    public GenreServiceImpl(GenreEntityRepository genreEntityRepository, GenreDtoMapper genreDtoMapper, MovieEntityRepository movieEntityRepository) {
+    public GenreServiceImpl(GenreEntityRepository genreEntityRepository, GenreDtoMapper genreDtoMapper) {
         this.genreEntityRepository = genreEntityRepository;
         this.genreDtoMapper = genreDtoMapper;
-        this.movieEntityRepository = movieEntityRepository;
     }
 
     @Override
