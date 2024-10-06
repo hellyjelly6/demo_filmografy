@@ -19,11 +19,24 @@ import org.example.servlet.mapper.impl.MovieDtoMapperImpl;
 import java.util.List;
 
 public class MovieServiceImpl implements MovieService {
-    private MovieEntityRepository movieRepository  = new MovieEntityRepositoryImpl();
-    private ActorDtoMapper actorDtoMapper = new ActorDtoMapperImpl();
-    private MovieDtoMapper movieDtoMapper = new MovieDtoMapperImpl();
-    private ActorToMovieEntityRepository actorToMovieRepository = new ActorToMovieEntityRepositoryImpl();
+    private MovieEntityRepository movieRepository;
+    private ActorDtoMapper actorDtoMapper;
+    private MovieDtoMapper movieDtoMapper;
+    private ActorToMovieEntityRepository actorToMovieRepository;
 
+    public MovieServiceImpl() {
+        movieRepository = new MovieEntityRepositoryImpl();
+        actorDtoMapper = new ActorDtoMapperImpl();
+        movieDtoMapper = new MovieDtoMapperImpl();
+        actorToMovieRepository = new ActorToMovieEntityRepositoryImpl();
+    }
+
+    public MovieServiceImpl(MovieEntityRepository movieRepository, ActorDtoMapper actorDtoMapper, MovieDtoMapper movieDtoMapper, ActorToMovieEntityRepository actorToMovieRepository) {
+        this.movieRepository = movieRepository;
+        this.actorDtoMapper = actorDtoMapper;
+        this.movieDtoMapper = movieDtoMapper;
+        this.actorToMovieRepository = actorToMovieRepository;
+    }
 
     @Override
     public List<MovieOutGoingDto> findAll(){
@@ -71,10 +84,10 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void exists(Long id) throws NotFoundException {
-       boolean exists = movieRepository.exists(id);
-       if(!exists){
-           throw new NotFoundException("Movie Not Found");
-       }
+        boolean exists = movieRepository.exists(id);
+        if(!exists){
+            throw new NotFoundException("Movie Not Found");
+        }
     }
 
 }

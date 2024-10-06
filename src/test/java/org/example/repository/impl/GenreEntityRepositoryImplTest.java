@@ -6,73 +6,50 @@ import org.example.db.ConnectionManagerImpl;
 import org.example.model.GenreEntity;
 import org.example.repository.GenreEntityRepository;
 import org.example.repository.mapper.impl.GenreResultSetMapperImpl;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Testcontainers
 class GenreEntityRepositoryImplTest {
+    @Container
+    // Инициализируем MySQL контейнер с Testcontainers, используя данные из db.properties
+    public static MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0")
+            .withDatabaseName("filmografy")
+            .withUsername("test") // Используем username из db.properties
+            .withPassword("test") // Используем password из db.properties
+            .withInitScript("SQL/initialization.sql"); // SQL-скрипт для инициализации данных
 
-    private static MySQLContainer<?> mysqlContainer;
-    private static HikariDataSource dataSource;
+
     private GenreEntityRepository genreRepository;
-
-    @BeforeAll
-    public static void startContainer() {
-        // Загружаем данные из db.properties
-        Properties properties = new Properties();
-        try (InputStream input = GenreEntityRepositoryImplTest.class.getClassLoader().getResourceAsStream("db.properties")) {
-            if (input == null) {
-                throw new RuntimeException("Не удалось найти файл db.properties");
-            }
-            properties.load(input);
-        } catch (IOException e) {
-            throw new RuntimeException("Ошибка при загрузке файла db.properties", e);
-        }
-
-        String dbUsername = properties.getProperty("dbUsername");
-        String dbPassword = properties.getProperty("dbPassword");
-
-        // Инициализируем MySQL контейнер с Testcontainers, используя данные из db.properties
-        mysqlContainer = new MySQLContainer<>("mysql:8.0")
-                .withDatabaseName("filmografy")
-                .withUsername(dbUsername) // Используем username из db.properties
-                .withPassword(dbPassword) // Используем password из db.properties
-                .withInitScript("SQL/initialization.sql"); // SQL-скрипт для инициализации данных
-        mysqlContainer.start();
-
-        // Настройка HikariCP для подключения к контейнеру
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(mysqlContainer.getJdbcUrl());
-        config.setUsername(mysqlContainer.getUsername());
-        config.setPassword(mysqlContainer.getPassword());
-        config.setDriverClassName(mysqlContainer.getDriverClassName());
-
-        dataSource = new HikariDataSource(config);
-    }
-
-    @AfterAll
-    public static void stopContainer() {
-        if (dataSource != null) {
-            dataSource.close();
-        }
-        if (mysqlContainer != null) {
-            mysqlContainer.stop();
-        }
-    }
+    private static ConnectionManagerImpl connectionManager;
 
     @BeforeEach
-    public void setUp() {
-        ConnectionManagerImpl connectionManager = new ConnectionManagerImpl(dataSource);
-        genreRepository = new GenreEntityRepositoryImpl(connectionManager, new GenreResultSetMapperImpl());
+    public void setUp() throws SQLException {
+        connectionManager = new ConnectionManagerImpl(mysqlContainer.getJdbcUrl() + "?useSSL=false&serverTimezone=Europe/Moscow",
+                mysqlContainer.getUsername(),
+                mysqlContainer.getPassword(),
+                mysqlContainer.getDriverClassName());
+        try(Connection connection = connectionManager.getConnection()) {
+            genreRepository = new GenreEntityRepositoryImpl(connectionManager, new GenreResultSetMapperImpl());
+        }
+    }
+
+    @AfterEach
+    public void tearDown() {
+        if (connectionManager != null) {
+            connectionManager.closeDataSource();
+        }
     }
 
     @Test
@@ -84,11 +61,11 @@ class GenreEntityRepositoryImplTest {
 
     @Test
     void deleteById() {
-        boolean isDeleted = genreRepository.deleteById(1L);
+        boolean isDeleted = genreRepository.deleteById(5L);
         assertTrue(isDeleted);
 
         // Проверяем, что жанр действительно удалён
-        GenreEntity deletedGenre = genreRepository.findById(1L);
+        GenreEntity deletedGenre = genreRepository.findById(5L);
         assertNull(deletedGenre);
     }
 

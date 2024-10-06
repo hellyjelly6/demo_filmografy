@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class MovieEntity {
 
-    private static final transient ActorToMovieEntityRepository actorToMovieRepository = new ActorToMovieEntityRepositoryImpl();
+    private static final ActorToMovieEntityRepository actorToMovieRepository = new ActorToMovieEntityRepositoryImpl();
 
     private Long id;
     private String title;

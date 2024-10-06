@@ -50,8 +50,7 @@ class ActorServletTest {
     @BeforeEach
     void setUp() throws IOException {
         closeable = MockitoAnnotations.openMocks(this);
-        actorServlet = new ActorServlet();
-        actorServlet.setActorService(mockActorService);
+        actorServlet = new ActorServlet(mockActorService);
         stringWriter = new StringWriter();
         printWriter = new PrintWriter(stringWriter);
         when(mockResponse.getWriter()).thenReturn(printWriter);

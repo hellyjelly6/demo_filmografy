@@ -9,9 +9,6 @@
          version="5.0">
 
     <display-name>My filmografy</display-name>
-    <listener>
-        <listener-class>org.example.config.AppInitializer</listener-class>
-    </listener>
 
 
 

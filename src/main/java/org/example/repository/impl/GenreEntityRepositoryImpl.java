@@ -14,10 +14,18 @@ import java.util.List;
 
 public class GenreEntityRepositoryImpl implements GenreEntityRepository {
 
-    private ConnectionManager connectionManager = new ConnectionManagerImpl();
-    private GenreResultSetMapper genreResultSetMapper = new GenreResultSetMapperImpl();
+    private final ConnectionManager connectionManager;
+    private final GenreResultSetMapper genreResultSetMapper;
 
-    public GenreEntityRepositoryImpl() {}
+    public GenreEntityRepositoryImpl() {
+        this.connectionManager = new ConnectionManagerImpl();
+        this.genreResultSetMapper = new GenreResultSetMapperImpl();
+    }
+
+    public GenreEntityRepositoryImpl(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+        this.genreResultSetMapper = new GenreResultSetMapperImpl();
+    }
 
     public GenreEntityRepositoryImpl(ConnectionManager connectionManager, GenreResultSetMapper genreResultSetMapper) {
         this.connectionManager = connectionManager;
@@ -29,7 +37,7 @@ public class GenreEntityRepositoryImpl implements GenreEntityRepository {
         GenreEntity genreEntity = null;
 
         try (Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(GenreSQLQuery.FIND_BY_ID_SQL.getQuery())){
+             PreparedStatement preparedStatement = connection.prepareStatement(GenreSQLQuery.FIND_BY_ID_SQL.getQuery())){
             preparedStatement.setLong(1, id);
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -45,10 +53,10 @@ public class GenreEntityRepositoryImpl implements GenreEntityRepository {
 
     @Override
     public boolean deleteById(Long id) {
-        MovieEntityRepositoryImpl movieEntityRepository = new MovieEntityRepositoryImpl();
+        MovieEntityRepositoryImpl movieEntityRepository = new MovieEntityRepositoryImpl(this.connectionManager);
         boolean result = false;
         try(Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(GenreSQLQuery.DELETE_SQL.getQuery())){
+            PreparedStatement preparedStatement = connection.prepareStatement(GenreSQLQuery.DELETE_SQL.getQuery())){
 
             movieEntityRepository.deleteConstraintByGenreId(id);
 
@@ -67,7 +75,7 @@ public class GenreEntityRepositoryImpl implements GenreEntityRepository {
         List<GenreEntity> genreEntityList = new ArrayList<>();
 
         try (Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(GenreSQLQuery.FIND_ALL_SQL.getQuery())){
+             PreparedStatement preparedStatement = connection.prepareStatement(GenreSQLQuery.FIND_ALL_SQL.getQuery())){
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
@@ -83,7 +91,7 @@ public class GenreEntityRepositoryImpl implements GenreEntityRepository {
     @Override
     public GenreEntity save(GenreEntity genreEntity) {
         try(Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(GenreSQLQuery.SAVE_SQL.getQuery(), Statement.RETURN_GENERATED_KEYS)){
+            PreparedStatement preparedStatement = connection.prepareStatement(GenreSQLQuery.SAVE_SQL.getQuery(), Statement.RETURN_GENERATED_KEYS)){
 
             preparedStatement.setString(1, genreEntity.getName());
             preparedStatement.executeUpdate();
@@ -105,7 +113,7 @@ public class GenreEntityRepositoryImpl implements GenreEntityRepository {
     @Override
     public GenreEntity update(GenreEntity genreEntity)  {
         try (Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(GenreSQLQuery.UPDATE_SQL.getQuery())){
+             PreparedStatement preparedStatement = connection.prepareStatement(GenreSQLQuery.UPDATE_SQL.getQuery())){
 
             preparedStatement.setString(1, genreEntity.getName());
             preparedStatement.setLong(2, genreEntity.getId());
@@ -119,7 +127,7 @@ public class GenreEntityRepositoryImpl implements GenreEntityRepository {
     @Override
     public boolean exists(Long id) {
         try(Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(GenreSQLQuery.EXISTS_BY_ID_SQL.getQuery())){
+            PreparedStatement preparedStatement = connection.prepareStatement(GenreSQLQuery.EXISTS_BY_ID_SQL.getQuery())){
             preparedStatement.setLong(1, id);
 
             ResultSet resultSet = preparedStatement.executeQuery();

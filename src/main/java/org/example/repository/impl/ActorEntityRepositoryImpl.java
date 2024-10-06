@@ -13,24 +13,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActorEntityRepositoryImpl implements ActorEntityRepository {
-    ConnectionManagerImpl connectionManager;
-    ActorResultSetMapper actorResultSetMapper = new ActorResultSetMapperImpl();
-    ActorToMovieEntityRepository actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl();
-
-    public ActorEntityRepositoryImpl() {
-        connectionManager = new ConnectionManagerImpl();
-    }
+    private final ConnectionManagerImpl connectionManager;
+    private final ActorResultSetMapper actorResultSetMapper;
+    private final ActorToMovieEntityRepository actorToMovieEntityRepository;
 
     public ActorEntityRepositoryImpl(ConnectionManagerImpl connectionManager) {
         this.connectionManager = connectionManager;
+        this.actorResultSetMapper = new ActorResultSetMapperImpl();
+        this.actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl(this.connectionManager);
     }
 
+    public ActorEntityRepositoryImpl() {
+        this.connectionManager = new ConnectionManagerImpl();
+        this.actorResultSetMapper = new ActorResultSetMapperImpl();
+        this.actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl(this.connectionManager);
+    }
 
     @Override
     public ActorEntity findById(Long id) {
         ActorEntity actorEntity = null;
         try(Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(ActorSQLQuery.FIND_BY_ID_SQL.getQuery())) {
+            PreparedStatement preparedStatement = connection.prepareStatement(ActorSQLQuery.FIND_BY_ID_SQL.getQuery())) {
 
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -47,7 +50,7 @@ public class ActorEntityRepositoryImpl implements ActorEntityRepository {
     public boolean deleteById(Long id) {
         boolean result = false;
         try(Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(ActorSQLQuery.DELETE_SQL.getQuery())) {
+            PreparedStatement preparedStatement = connection.prepareStatement(ActorSQLQuery.DELETE_SQL.getQuery())) {
 
             actorToMovieEntityRepository.deleteByActorId(id);
 
@@ -80,7 +83,7 @@ public class ActorEntityRepositoryImpl implements ActorEntityRepository {
     @Override
     public ActorEntity save(ActorEntity actorEntity)  {
         try(Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(ActorSQLQuery.SAVE_SQL.getQuery(), Statement.RETURN_GENERATED_KEYS)){
+            PreparedStatement preparedStatement = connection.prepareStatement(ActorSQLQuery.SAVE_SQL.getQuery(), Statement.RETURN_GENERATED_KEYS)){
             preparedStatement.setString(1, actorEntity.getFirstName());
             preparedStatement.setString(2, actorEntity.getLastName());
             preparedStatement.setDate(3, actorEntity.getBirthDate());
@@ -107,7 +110,7 @@ public class ActorEntityRepositoryImpl implements ActorEntityRepository {
     @Override
     public ActorEntity update(ActorEntity actorEntity)  {
         try(Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(ActorSQLQuery.UPDATE_SQL.getQuery())){
+            PreparedStatement preparedStatement = connection.prepareStatement(ActorSQLQuery.UPDATE_SQL.getQuery())){
             preparedStatement.setString(1, actorEntity.getFirstName());
             preparedStatement.setString(2, actorEntity.getLastName());
             preparedStatement.setDate(3, actorEntity.getBirthDate());
@@ -124,7 +127,7 @@ public class ActorEntityRepositoryImpl implements ActorEntityRepository {
     @Override
     public boolean exists(Long id) {
         try(Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(ActorSQLQuery.EXISTS_BY_ID_SQL.getQuery())){
+            PreparedStatement preparedStatement = connection.prepareStatement(ActorSQLQuery.EXISTS_BY_ID_SQL.getQuery())){
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){
@@ -136,3 +139,4 @@ public class ActorEntityRepositoryImpl implements ActorEntityRepository {
         return false;
     }
 }
+

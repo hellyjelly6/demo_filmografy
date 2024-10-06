@@ -48,8 +48,7 @@ class MovieServletTest {
     @BeforeEach
     void setUp() throws IOException {
         closeable = MockitoAnnotations.openMocks(this);
-        movieServlet = new MovieServlet();
-        movieServlet.setMovieService(mockMovieService);
+        movieServlet = new MovieServlet(mockMovieService);
         stringWriter = new StringWriter();
         writer = new PrintWriter(stringWriter);
         gson = new Gson();
@@ -178,7 +177,7 @@ class MovieServletTest {
         verify(mockResponse).setStatus(HttpServletResponse.SC_BAD_REQUEST);
         writer.flush();
         String actualResponse = stringWriter.toString();
-        String expectedResponse = "Illegal Request, movie is null";
+        String expectedResponse = "Illegal Request";
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -302,7 +301,7 @@ class MovieServletTest {
     }
 
     @Test
-    void doPutSaveActorsEmpty() throws IOException {
+    void doPutSaveActorsEmpty() throws IOException, NotFoundException {
         Long id = 3L;
         ActorLimitedDto[] actors = {};
 

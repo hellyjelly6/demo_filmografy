@@ -1,6 +1,7 @@
 package org.example.servlet;
 
 import com.google.gson.Gson;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,17 +18,20 @@ import java.util.List;
 
 @WebServlet(urlPatterns = {"/genre/*"})
 public class GenreServlet extends HttpServlet {
-    transient private final Gson gson = new Gson();
-    transient private GenreService genreService;
+    private final Gson gson = new Gson();
+    private transient GenreService genreService;
 
-    public GenreServlet() {
-        this.genreService = new GenreServiceImpl();
-    }
+    public GenreServlet() {}
 
-    public void setGenreService(GenreService genreService) {
+    public GenreServlet(GenreService genreService) {
         this.genreService = genreService;
     }
 
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        genreService = new GenreServiceImpl();
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -142,3 +146,4 @@ public class GenreServlet extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
     }
 }
+

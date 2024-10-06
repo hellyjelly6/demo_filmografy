@@ -42,6 +42,7 @@ class ActorServiceImplTest {
     @BeforeEach
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
+        actorService = new ActorServiceImpl(mockActorEntityRepository, mockActorToMovieEntityRepository, mockActorDtoMapper);
 
         actorIncomingDto = new ActorIncomingDto("Эмилия", "Кларк", java.sql.Date.valueOf("1986-10-23") );
         actorEntity = new ActorEntity(1L, "Эмилия", "Кларк", java.sql.Date.valueOf("1986-10-23"), List.of());
@@ -100,7 +101,7 @@ class ActorServiceImplTest {
     }
 
     @Test
-    void findByIdNotFound(){
+    void findByIdNotFound() throws NotFoundException {
         when(mockActorEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> actorService.findById(1L));
@@ -150,7 +151,7 @@ class ActorServiceImplTest {
     }
 
     @Test
-    void updateNotFound()  {
+    void updateNotFound() throws NotFoundException {
         when(mockActorEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> actorService.update(actorIncomingDto, 1L));
@@ -169,11 +170,12 @@ class ActorServiceImplTest {
         assertTrue(result);
 
         verify(mockActorEntityRepository).exists(1L);
+        //verify(mockActorToMovieEntityRepository).deleteByActorId(1L);
         verify(mockActorEntityRepository).deleteById(1L);
     }
 
     @Test
-    void deleteNotFound() {
+    void deleteNotFound() throws NotFoundException {
         when(mockActorEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> actorService.delete(1L));

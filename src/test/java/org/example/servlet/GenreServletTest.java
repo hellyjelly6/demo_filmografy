@@ -45,8 +45,7 @@ class GenreServletTest {
     @BeforeEach
     void setUp() throws IOException {
         closeable = MockitoAnnotations.openMocks(this);
-        genreServlet = new GenreServlet();
-        genreServlet.setGenreService(mockGenreService);
+        genreServlet = new GenreServlet(mockGenreService);
         stringWriter = new StringWriter();
         writer = new PrintWriter(stringWriter);
         gson = new Gson();

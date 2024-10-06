@@ -14,24 +14,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MovieEntityRepositoryImpl implements MovieEntityRepository {
-    private ConnectionManager connectionManager;
-    private final MovieResultSetMapper resultSetMapper = new MovieResultSetMapperImpl();
-    private final ActorToMovieEntityRepository actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl();
+    private final ConnectionManager connectionManager;
+    private final MovieResultSetMapper resultSetMapper;
+    private final ActorToMovieEntityRepository actorToMovieEntityRepository;
+
+    public MovieEntityRepositoryImpl(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+        this.resultSetMapper = new MovieResultSetMapperImpl();
+        this.actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl(connectionManager);
+    }
 
     public MovieEntityRepositoryImpl() {
-        connectionManager = new ConnectionManagerImpl();
+        this.connectionManager = new ConnectionManagerImpl();
+        this.resultSetMapper = new MovieResultSetMapperImpl();
+        this.actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl(connectionManager);
     }
-
-    public MovieEntityRepositoryImpl(ConnectionManagerImpl connectionManager) {
-        this.connectionManager = connectionManager;
-    }
-
 
     @Override
     public MovieEntity findById(Long id)  {
         MovieEntity movieEntity = null;
         try(Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(MovieSQLQuery.FIND_BY_ID_SQL.getQuery())){
+            PreparedStatement preparedStatement = connection.prepareStatement(MovieSQLQuery.FIND_BY_ID_SQL.getQuery())){
             preparedStatement.setLong(1, id);
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -48,7 +51,7 @@ public class MovieEntityRepositoryImpl implements MovieEntityRepository {
     public boolean deleteById(Long id) {
         boolean isDelete = false;
         try(Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(MovieSQLQuery.DELETE_SQL.getQuery())){
+            PreparedStatement preparedStatement = connection.prepareStatement(MovieSQLQuery.DELETE_SQL.getQuery())){
 
             actorToMovieEntityRepository.deleteByMovieId(id);
 
@@ -64,7 +67,7 @@ public class MovieEntityRepositoryImpl implements MovieEntityRepository {
     public List<MovieEntity> findAll()  {
         List<MovieEntity> movieEntities = new ArrayList<>();
         try(Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(MovieSQLQuery.FIND_ALL_SQL.getQuery())){
+            PreparedStatement preparedStatement = connection.prepareStatement(MovieSQLQuery.FIND_ALL_SQL.getQuery())){
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
@@ -79,7 +82,7 @@ public class MovieEntityRepositoryImpl implements MovieEntityRepository {
     @Override
     public MovieEntity save(MovieEntity movieEntity)  {
         try(Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(MovieSQLQuery.SAVE_SQL.getQuery(), Statement.RETURN_GENERATED_KEYS)){
+            PreparedStatement preparedStatement = connection.prepareStatement(MovieSQLQuery.SAVE_SQL.getQuery(), Statement.RETURN_GENERATED_KEYS)){
 
             preparedStatement.setString(1, movieEntity.getTitle());
             preparedStatement.setInt(2, movieEntity.getReleaseYear());
@@ -114,7 +117,7 @@ public class MovieEntityRepositoryImpl implements MovieEntityRepository {
     @Override
     public MovieEntity update(MovieEntity movieEntity)  {
         try(Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(MovieSQLQuery.UPDATE_SQL.getQuery())){
+            PreparedStatement preparedStatement = connection.prepareStatement(MovieSQLQuery.UPDATE_SQL.getQuery())){
 
             preparedStatement.setString(1, movieEntity.getTitle());
             preparedStatement.setInt(2, movieEntity.getReleaseYear());
@@ -137,7 +140,7 @@ public class MovieEntityRepositoryImpl implements MovieEntityRepository {
     public boolean exists(Long id) {
         boolean isExists = false;
         try(Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(MovieSQLQuery.EXISTS_BY_ID_SQL.getQuery())) {
+            PreparedStatement preparedStatement = connection.prepareStatement(MovieSQLQuery.EXISTS_BY_ID_SQL.getQuery())) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet.next()) {
@@ -146,7 +149,7 @@ public class MovieEntityRepositoryImpl implements MovieEntityRepository {
         } catch (SQLException e) {
             throw new RuntimeException("Error checking movie exists", e);
         }
-        return isExists;
+        return false;
     }
 
     @Override

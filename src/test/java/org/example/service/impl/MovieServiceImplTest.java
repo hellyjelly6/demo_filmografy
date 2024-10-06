@@ -49,6 +49,7 @@ class MovieServiceImplTest {
     @BeforeEach
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
+        movieService = new MovieServiceImpl(mockmovieEntityRepository, mockactorDtoMapper, mockmovieDtoMapper, mockactorToMovieEntityRepository);
 
         movieIncomingDto = new MovieIncomingDto("Титаник", 1997, new GenreEntity());
         movieEntity = new MovieEntity(1L, "Титаник", 1997, new GenreEntity(), List.of());
@@ -111,7 +112,7 @@ class MovieServiceImplTest {
     }
 
     @Test
-    void findByIdNotFound()  {
+    void findByIdNotFound() throws NotFoundException {
         when(mockmovieEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> movieService.findById(1L));
@@ -194,7 +195,7 @@ class MovieServiceImplTest {
     }
 
     @Test
-    void updateNotFound() {
+    void updateNotFound() throws NotFoundException {
         when(mockmovieEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> movieService.update(movieIncomingDto, 1L));
@@ -217,7 +218,7 @@ class MovieServiceImplTest {
     }
 
     @Test
-    void deleteNotFound(){
+    void deleteNotFound() throws NotFoundException {
         when(mockmovieEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> movieService.delete(1L));

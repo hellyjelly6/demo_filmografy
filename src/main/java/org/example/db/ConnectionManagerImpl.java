@@ -11,30 +11,41 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class ConnectionManagerImpl implements ConnectionManager {
-    private static HikariDataSource dataSource;
-    public ConnectionManagerImpl() {}
-    public ConnectionManagerImpl(HikariDataSource dataSource){
-        ConnectionManagerImpl.dataSource = dataSource;
-    }
+    private HikariDataSource dataSource;
 
-
-    static {
+    public ConnectionManagerImpl() {
         Properties properties = new Properties();
         try (InputStream input = ConnectionManagerImpl.class.getClassLoader().getResourceAsStream("db.properties")) {
             properties.load(input);
-            HikariConfig config = new HikariConfig();
-            config.setJdbcUrl(properties.getProperty("dbUrl"));
-            config.setUsername(properties.getProperty("dbUsername"));
-            config.setPassword(properties.getProperty("dbPassword"));
-            config.setDriverClassName(properties.getProperty("dbDriverClassName"));
-            dataSource = new HikariDataSource(config);
+            initialize(properties.getProperty("dbUrl"),
+                    properties.getProperty("dbUsername"),
+                    properties.getProperty("dbPassword"),
+                    properties.getProperty("dbDriverClassName"));
         } catch (IOException e) {
             throw new RuntimeException("Failed to load database configuration", e);
         }
     }
 
-    public static DataSource getDataSource() {
-        return dataSource;
+    public ConnectionManagerImpl(String url, String username, String password, String driverClassName) {
+        initialize(url, username, password, driverClassName);
+    }
+
+
+    private void initialize(String url, String username, String password, String driverClassName) {
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(url);
+        config.setUsername(username);
+        config.setPassword(password);
+        config.setDriverClassName(driverClassName);
+        config.setMaximumPoolSize(10);
+        config.setIdleTimeout(50000);
+        dataSource = new HikariDataSource(config);
+    }
+
+    public void closeDataSource() {
+        if (dataSource != null && !dataSource.isClosed()) {
+            dataSource.close();
+        }
     }
 
     @Override

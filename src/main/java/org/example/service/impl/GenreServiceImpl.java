@@ -17,10 +17,21 @@ import org.example.servlet.mapper.impl.GenreDtoMapperImpl;
 import java.util.List;
 
 public class GenreServiceImpl implements GenreService {
-   private GenreEntityRepository genreEntityRepository = new GenreEntityRepositoryImpl(new ConnectionManagerImpl(), new GenreResultSetMapperImpl());
-   private GenreDtoMapper genreDtoMapper = new GenreDtoMapperImpl();
+    private GenreEntityRepository genreEntityRepository;
+    private GenreDtoMapper genreDtoMapper;
+    private MovieEntityRepository movieEntityRepository;
 
+    public GenreServiceImpl() {
+        genreEntityRepository = new GenreEntityRepositoryImpl();
+        genreDtoMapper = new GenreDtoMapperImpl();
+        movieEntityRepository = new MovieEntityRepositoryImpl();
+    }
 
+    public GenreServiceImpl(GenreEntityRepository genreEntityRepository, GenreDtoMapper genreDtoMapper, MovieEntityRepository movieEntityRepository) {
+        this.genreEntityRepository = genreEntityRepository;
+        this.genreDtoMapper = genreDtoMapper;
+        this.movieEntityRepository = movieEntityRepository;
+    }
 
     @Override
     public List<GenreOutGoingDto> findAll() {

@@ -2,6 +2,7 @@ package org.example.servlet;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,15 +21,22 @@ import java.util.List;
 
 @WebServlet(urlPatterns = {"/actor/*"})
 public class ActorServlet extends HttpServlet {
-    transient ActorService actorService = new ActorServiceImpl();
-    transient Gson gson = new GsonBuilder()
+    private transient ActorService actorService;
+    Gson gson = new GsonBuilder()
             .registerTypeAdapter(java.sql.Date.class, new SqlDateDeserializer()) // Десериализация
             .registerTypeAdapter(java.sql.Date.class, new SqlDateSerializer())   // Сериализация
             .create();
 
+    public ActorServlet() {}
 
-    public void setActorService(ActorService actorService) {
+    public ActorServlet(ActorService actorService) {
         this.actorService = actorService;
+    }
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        this.actorService = new ActorServiceImpl();
     }
 
 
@@ -81,7 +89,7 @@ public class ActorServlet extends HttpServlet {
             response = e.getMessage();
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response = "Bad Request: %s".formatted(e.getMessage());
+            response = "Bad Request: "+e.getMessage();
         }
         PrintWriter printWriter = resp.getWriter();
         printWriter.print(response);
@@ -142,3 +150,4 @@ public class ActorServlet extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
     }
 }
+

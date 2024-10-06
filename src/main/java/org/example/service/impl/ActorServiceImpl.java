@@ -15,10 +15,21 @@ import org.example.servlet.mapper.impl.ActorDtoMapperImpl;
 import java.util.List;
 
 public class ActorServiceImpl implements ActorService {
-    ActorEntityRepository actorEntityRepository = new ActorEntityRepositoryImpl();
-    ActorToMovieEntityRepository actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl();
-    ActorDtoMapper actorDtoMapper = new ActorDtoMapperImpl();
+    ActorEntityRepository actorEntityRepository;
+    ActorToMovieEntityRepository actorToMovieEntityRepository;
+    ActorDtoMapper actorDtoMapper;
 
+    public ActorServiceImpl(ActorEntityRepository actorEntityRepository, ActorToMovieEntityRepository actorToMovieEntityRepository, ActorDtoMapper actorDtoMapper) {
+        this.actorEntityRepository = actorEntityRepository;
+        this.actorToMovieEntityRepository = actorToMovieEntityRepository;
+        this.actorDtoMapper = actorDtoMapper;
+    }
+
+    public ActorServiceImpl(){
+        this.actorEntityRepository = new ActorEntityRepositoryImpl();
+        this.actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl();
+        this.actorDtoMapper = new ActorDtoMapperImpl();
+    }
 
     @Override
     public List<ActorOutGoingDto> findAll() {

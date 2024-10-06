@@ -22,18 +22,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActorToMovieEntityRepositoryImpl implements ActorToMovieEntityRepository {
-private ConnectionManager connectionManager;
-private final MovieResultSetMapper movieResultSetMapper = new MovieResultSetMapperImpl();
-private final ActorResultSetMapper actorResultSetMapper = new ActorResultSetMapperImpl();
+    private final ConnectionManager connectionManager;
+    private final MovieResultSetMapper movieResultSetMapper;
+    private final ActorResultSetMapper actorResultSetMapper;
+
+    public ActorToMovieEntityRepositoryImpl(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+        this.movieResultSetMapper = new MovieResultSetMapperImpl();
+        this.actorResultSetMapper = new ActorResultSetMapperImpl();
+    }
 
     public ActorToMovieEntityRepositoryImpl() {
-        connectionManager = new ConnectionManagerImpl();
+        this.connectionManager = new ConnectionManagerImpl();
+        this.movieResultSetMapper = new MovieResultSetMapperImpl();
+        this.actorResultSetMapper = new ActorResultSetMapperImpl();
     }
-
-    public ActorToMovieEntityRepositoryImpl(ConnectionManagerImpl connectionManager) {
-        this.connectionManager = connectionManager;
-    }
-
 
     @Override
     public boolean deleteByMovieId(Long id) {
@@ -53,7 +56,7 @@ private final ActorResultSetMapper actorResultSetMapper = new ActorResultSetMapp
     public boolean deleteByActorId(Long id) {
         boolean result;
         try(Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(ActorToMovieSQLQuery.DELETE_BY_ACTOR_ID_SQL.getQuery())) {
+            PreparedStatement preparedStatement = connection.prepareStatement(ActorToMovieSQLQuery.DELETE_BY_ACTOR_ID_SQL.getQuery())) {
             preparedStatement.setLong(1, id);
             result = preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -66,7 +69,7 @@ private final ActorResultSetMapper actorResultSetMapper = new ActorResultSetMapp
     public List<MovieEntity> findMoviesByActorId(Long id) {
         List<MovieEntity> moviesList = new ArrayList<>();
         try(Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(ActorToMovieSQLQuery.FIND_ALL_BY_ACTOR_ID_SQL.getQuery())){
+            PreparedStatement preparedStatement = connection.prepareStatement(ActorToMovieSQLQuery.FIND_ALL_BY_ACTOR_ID_SQL.getQuery())){
 
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -83,7 +86,7 @@ private final ActorResultSetMapper actorResultSetMapper = new ActorResultSetMapp
     public List<ActorEntity> findActorsByMovieId(Long id) {
         List<ActorEntity> actorList = new ArrayList<>();
         try(Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(ActorToMovieSQLQuery.FIND_ALL_BY_MOVIE_ID_SQL.getQuery())){
+            PreparedStatement preparedStatement = connection.prepareStatement(ActorToMovieSQLQuery.FIND_ALL_BY_MOVIE_ID_SQL.getQuery())){
 
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -100,7 +103,7 @@ private final ActorResultSetMapper actorResultSetMapper = new ActorResultSetMapp
     public void saveActorsToMovieByUserName(Long movieId, ActorEntity actor) {
         Long actorId = 0L;
         try(Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(ActorSQLQuery.FIND_ACTOR_ID_BY_ACTOR_NAME.getQuery())){
+            PreparedStatement preparedStatement = connection.prepareStatement(ActorSQLQuery.FIND_ACTOR_ID_BY_ACTOR_NAME.getQuery())){
 
             preparedStatement.setString(1, actor.getFirstName());
             preparedStatement.setString(2, actor.getLastName());
