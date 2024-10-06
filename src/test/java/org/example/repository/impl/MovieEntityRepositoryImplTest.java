@@ -40,8 +40,8 @@ class MovieEntityRepositoryImplTest {
     public void setUp() throws SQLException {
         connectionManager = new ConnectionManagerImpl(mysqlContainer.getJdbcUrl() + "?useSSL=false&serverTimezone=Europe/Moscow",
                 mysqlContainer.getUsername(),
-                mysqlContainer.getPassword(),
-                mysqlContainer.getDriverClassName());
+                mysqlContainer.getPassword());
+                //mysqlContainer.getDriverClassName());
         try(Connection connection = connectionManager.getConnection()) {
             genreEntityRepository = new GenreEntityRepositoryImpl(connectionManager);
             movieEntityRepository = new MovieEntityRepositoryImpl(connectionManager);
@@ -49,9 +49,9 @@ class MovieEntityRepositoryImplTest {
     }
 
     @AfterEach
-    public void tearDown() {
+    public void tearDown() throws Exception {
         if (connectionManager != null) {
-            connectionManager.closeDataSource();
+            connectionManager.close();
         }
     }
 

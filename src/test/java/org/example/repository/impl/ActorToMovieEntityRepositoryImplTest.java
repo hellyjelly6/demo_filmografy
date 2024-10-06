@@ -38,17 +38,17 @@ class ActorToMovieEntityRepositoryImplTest {
     public void setUp() throws SQLException {
         connectionManager = new ConnectionManagerImpl(mysqlContainer.getJdbcUrl() + "?useSSL=false&serverTimezone=Europe/Moscow",
                 mysqlContainer.getUsername(),
-                mysqlContainer.getPassword(),
-                mysqlContainer.getDriverClassName());
+                mysqlContainer.getPassword());
+               // mysqlContainer.getDriverClassName());
         try (Connection connection = connectionManager.getConnection()) {
             actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl(connectionManager);
         }
     }
 
     @AfterEach
-    public void tearDown() {
+    public void tearDown() throws Exception {
         if (connectionManager != null) {
-            connectionManager.closeDataSource();
+            connectionManager.close();
         }
     }
 

@@ -167,7 +167,6 @@ class GenreServiceImplTest {
         assertTrue(result);
 
         verify(mockGenreEntityRepository).exists(1L);
-        //verify(mockMovieEntityRepository).deleteConstraintByGenreId(1L);
         verify(mockGenreEntityRepository).deleteById(1L);
     }
 

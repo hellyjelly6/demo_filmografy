@@ -29,7 +29,6 @@ public class GenreServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        super.init();
         genreService = new GenreServiceImpl();
     }
 

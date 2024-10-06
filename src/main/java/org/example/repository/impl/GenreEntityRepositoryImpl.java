@@ -32,6 +32,10 @@ public class GenreEntityRepositoryImpl implements GenreEntityRepository {
         this.genreResultSetMapper = genreResultSetMapper;
     }
 
+    public ConnectionManager getConnectionManager() {
+        return connectionManager;
+    }
+
     @Override
     public GenreEntity findById(Long id)  {
         GenreEntity genreEntity = null;

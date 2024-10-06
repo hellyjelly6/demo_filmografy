@@ -1,5 +1,6 @@
 package org.example.repository.impl;
 
+import org.example.db.ConnectionManager;
 import org.example.db.ConnectionManagerImpl;
 import org.example.model.ActorEntity;
 import org.example.repository.ActorEntityRepository;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActorEntityRepositoryImpl implements ActorEntityRepository {
-    private final ConnectionManagerImpl connectionManager;
+    private final ConnectionManager connectionManager;
     private final ActorResultSetMapper actorResultSetMapper;
     private final ActorToMovieEntityRepository actorToMovieEntityRepository;
 
@@ -28,6 +29,12 @@ public class ActorEntityRepositoryImpl implements ActorEntityRepository {
         this.actorResultSetMapper = new ActorResultSetMapperImpl();
         this.actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl(this.connectionManager);
     }
+
+    public ConnectionManager getConnectionManager() {
+        return connectionManager;
+    }
+
+
 
     @Override
     public ActorEntity findById(Long id) {

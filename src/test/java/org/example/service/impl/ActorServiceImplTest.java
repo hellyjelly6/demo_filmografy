@@ -170,7 +170,6 @@ class ActorServiceImplTest {
         assertTrue(result);
 
         verify(mockActorEntityRepository).exists(1L);
-        //verify(mockActorToMovieEntityRepository).deleteByActorId(1L);
         verify(mockActorEntityRepository).deleteById(1L);
     }
 

@@ -1,5 +1,6 @@
 package org.example.repository.mapper.impl;
 
+import org.example.db.ConnectionManager;
 import org.example.db.ConnectionManagerImpl;
 import org.example.model.GenreEntity;
 import org.example.model.MovieEntity;
@@ -15,7 +16,7 @@ public class MovieResultSetMapperImpl implements MovieResultSetMapper {
     @Override
     public MovieEntity map(ResultSet resultSet) throws SQLException {
 
-        GenreEntityRepository genreRepository = new GenreEntityRepositoryImpl(new ConnectionManagerImpl(), new GenreResultSetMapperImpl());
+        GenreEntityRepository genreRepository = new GenreEntityRepositoryImpl();
         Long movieId = resultSet.getLong("id");
         GenreEntity genreEntity = genreRepository.findById(resultSet.getLong("genre_id"));
 

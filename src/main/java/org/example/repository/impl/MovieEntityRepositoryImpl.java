@@ -21,13 +21,17 @@ public class MovieEntityRepositoryImpl implements MovieEntityRepository {
     public MovieEntityRepositoryImpl(ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
         this.resultSetMapper = new MovieResultSetMapperImpl();
-        this.actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl(connectionManager);
+        this.actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl(this.connectionManager);
     }
 
     public MovieEntityRepositoryImpl() {
         this.connectionManager = new ConnectionManagerImpl();
         this.resultSetMapper = new MovieResultSetMapperImpl();
-        this.actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl(connectionManager);
+        this.actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl(this.connectionManager);
+    }
+
+    public ConnectionManager getConnectionManager() {
+        return connectionManager;
     }
 
     @Override

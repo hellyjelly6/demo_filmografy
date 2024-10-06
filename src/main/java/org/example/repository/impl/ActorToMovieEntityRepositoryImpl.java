@@ -38,6 +38,11 @@ public class ActorToMovieEntityRepositoryImpl implements ActorToMovieEntityRepos
         this.actorResultSetMapper = new ActorResultSetMapperImpl();
     }
 
+    public ConnectionManager getConnectionManager() {
+        return connectionManager;
+    }
+
+
     @Override
     public boolean deleteByMovieId(Long id) {
         boolean result;
