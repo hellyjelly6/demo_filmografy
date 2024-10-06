@@ -1,7 +1,6 @@
 package org.example.repository.mapper.impl;
 
 import org.example.db.ConnectionManager;
-import org.example.db.ConnectionManagerImpl;
 import org.example.model.GenreEntity;
 import org.example.model.MovieEntity;
 import org.example.repository.GenreEntityRepository;

@@ -2,6 +2,7 @@ package org.example.repository.impl;
 
 import org.example.db.ConnectionManager;
 import org.example.db.ConnectionManagerImpl;
+import org.example.exception.OperationException;
 import org.example.model.MovieEntity;
 import org.example.repository.ActorToMovieEntityRepository;
 import org.example.repository.MovieEntityRepository;
@@ -46,7 +47,7 @@ public class MovieEntityRepositoryImpl implements MovieEntityRepository {
                 movieEntity = resultSetMapper.map(resultSet, this.connectionManager);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error finding movie by id", e);
+            throw new OperationException("Error finding movie by id", e);
         }
         return movieEntity;
     }
@@ -62,7 +63,7 @@ public class MovieEntityRepositoryImpl implements MovieEntityRepository {
             preparedStatement.setLong(1, id);
             isDelete = preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Error deleting movie by id"+e.getMessage(), e);
+            throw new OperationException("Error deleting movie by id"+e.getMessage(), e);
         }
         return isDelete;
     }
@@ -78,7 +79,7 @@ public class MovieEntityRepositoryImpl implements MovieEntityRepository {
                 movieEntities.add(resultSetMapper.map(resultSet, this.connectionManager));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error finding all movies", e);
+            throw new OperationException("Error finding all movies", e);
         }
         return movieEntities;
     }
@@ -113,7 +114,7 @@ public class MovieEntityRepositoryImpl implements MovieEntityRepository {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error saving movie", e);
+            throw new OperationException("Error saving movie", e);
         }
         return movieEntity;
     }
@@ -135,7 +136,7 @@ public class MovieEntityRepositoryImpl implements MovieEntityRepository {
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error updating movie", e);
+            throw new OperationException("Error updating movie", e);
         }
         return movieEntity;
     }
@@ -151,9 +152,9 @@ public class MovieEntityRepositoryImpl implements MovieEntityRepository {
                 return resultSet.getBoolean(1) ;
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error checking movie exists", e);
+            throw new OperationException("Error checking movie exists", e);
         }
-        return false;
+        return isExists;
     }
 
     @Override
@@ -168,7 +169,7 @@ public class MovieEntityRepositoryImpl implements MovieEntityRepository {
                 moviesList.add(resultSetMapper.map(resultSet, this.connectionManager));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error finding all movies by actor id", e);
+            throw new OperationException("Error finding all movies by actor id", e);
         }
         return moviesList;
     }
@@ -181,7 +182,7 @@ public class MovieEntityRepositoryImpl implements MovieEntityRepository {
             preparedStatement.setLong(1, id);
             isUpdated = preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Error deleting movie by id"+e.getMessage(), e);
+            throw new OperationException("Error deleting movie by id"+e.getMessage(), e);
         }
         return isUpdated;
     }

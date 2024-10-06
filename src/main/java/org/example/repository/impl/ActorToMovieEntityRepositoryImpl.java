@@ -2,11 +2,10 @@ package org.example.repository.impl;
 
 import org.example.db.ConnectionManager;
 import org.example.db.ConnectionManagerImpl;
+import org.example.exception.OperationException;
 import org.example.model.ActorEntity;
 import org.example.model.MovieEntity;
-import org.example.repository.ActorEntityRepository;
 import org.example.repository.ActorToMovieEntityRepository;
-import org.example.repository.MovieEntityRepository;
 import org.example.repository.SQLQuery.ActorSQLQuery;
 import org.example.repository.SQLQuery.ActorToMovieSQLQuery;
 import org.example.repository.mapper.ActorResultSetMapper;
@@ -52,7 +51,7 @@ public class ActorToMovieEntityRepositoryImpl implements ActorToMovieEntityRepos
             preparedStatement.setLong(1, id);
             result = preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Error deleting by movie id", e);
+            throw new OperationException("Error deleting by movie id", e);
         }
         return result;
     }
@@ -65,7 +64,7 @@ public class ActorToMovieEntityRepositoryImpl implements ActorToMovieEntityRepos
             preparedStatement.setLong(1, id);
             result = preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Error deleting by actor id", e);
+            throw new OperationException("Error deleting by actor id", e);
         }
         return result;
     }
@@ -82,7 +81,7 @@ public class ActorToMovieEntityRepositoryImpl implements ActorToMovieEntityRepos
                 moviesList.add(movieResultSetMapper.map(resultSet, this.connectionManager));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error finding all movies by actor id", e);
+            throw new OperationException("Error finding all movies by actor id", e);
         }
         return moviesList;
     }
@@ -99,7 +98,7 @@ public class ActorToMovieEntityRepositoryImpl implements ActorToMovieEntityRepos
                 actorList.add(actorResultSetMapper.map(resultSet));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error finding all actors by movie id", e);
+            throw new OperationException("Error finding all actors by movie id", e);
         }
         return actorList;
     }
@@ -118,11 +117,11 @@ public class ActorToMovieEntityRepositoryImpl implements ActorToMovieEntityRepos
                 actorId = resultSet.getLong(1);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error finding actor id by actor name", e);
+            throw new OperationException("Error finding actor id by actor name", e);
         }
 
         if (actorId == 0L) {
-            throw new RuntimeException("Actor not found");
+            throw new OperationException("Actor not found");
         }
         else{
             try(Connection connection = connectionManager.getConnection();
@@ -131,7 +130,7 @@ public class ActorToMovieEntityRepositoryImpl implements ActorToMovieEntityRepos
                 preparedStatement.setLong(2, actorId);
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
-                throw new RuntimeException("Error saving reference actor_movie", e);
+                throw new OperationException("Error saving reference actor_movie", e);
             }
         }
 

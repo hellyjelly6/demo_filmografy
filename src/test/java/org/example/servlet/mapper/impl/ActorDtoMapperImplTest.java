@@ -5,7 +5,6 @@ import org.example.model.MovieEntity;
 import org.example.servlet.dto.ActorIncomingDto;
 import org.example.servlet.dto.ActorLimitedDto;
 import org.example.servlet.dto.ActorOutGoingDto;
-import org.example.servlet.dto.GenreIncomingDto;
 import org.example.servlet.mapper.ActorDtoMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -101,7 +101,7 @@ class GenreServiceImplTest {
     }
 
     @Test
-    void findByIdNotFound() throws NotFoundException {
+    void findByIdNotFound()  {
         when(mockGenreEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> genreService.findById(1L));
@@ -147,7 +147,7 @@ class GenreServiceImplTest {
     }
 
     @Test
-    void updateNotFound() throws NotFoundException {
+    void updateNotFound()  {
         when(mockGenreEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> genreService.update(genreIncomingDto, 1L));
@@ -171,7 +171,7 @@ class GenreServiceImplTest {
     }
 
     @Test
-    void deleteNotFound() throws NotFoundException {
+    void deleteNotFound()  {
         when(mockGenreEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> genreService.delete(1L));

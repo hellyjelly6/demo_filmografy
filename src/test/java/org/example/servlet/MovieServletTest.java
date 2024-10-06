@@ -177,7 +177,7 @@ class MovieServletTest {
         verify(mockResponse).setStatus(HttpServletResponse.SC_BAD_REQUEST);
         writer.flush();
         String actualResponse = stringWriter.toString();
-        String expectedResponse = "Illegal Request";
+        String expectedResponse = "Illegal Request, movie is null";
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -301,7 +301,7 @@ class MovieServletTest {
     }
 
     @Test
-    void doPutSaveActorsEmpty() throws IOException, NotFoundException {
+    void doPutSaveActorsEmpty() throws IOException {
         Long id = 3L;
         ActorLimitedDto[] actors = {};
 

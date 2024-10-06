@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public class SqlDateDeserializer implements JsonDeserializer<Date> {
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     @Override
     public java.sql.Date deserialize(JsonElement json, java.lang.reflect.Type typeOfT, com.google.gson.JsonDeserializationContext context)

@@ -2,6 +2,7 @@ package org.example.repository.impl;
 
 import org.example.db.ConnectionManager;
 import org.example.db.ConnectionManagerImpl;
+import org.example.exception.OperationException;
 import org.example.model.GenreEntity;
 import org.example.repository.GenreEntityRepository;
 import org.example.repository.SQLQuery.GenreSQLQuery;
@@ -50,7 +51,7 @@ public class GenreEntityRepositoryImpl implements GenreEntityRepository {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error finding genre by id", e);
+            throw new OperationException("Error finding genre by id", e);
         }
         return genreEntity;
     }
@@ -69,7 +70,7 @@ public class GenreEntityRepositoryImpl implements GenreEntityRepository {
 
             result =  affectedRows > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Error deleting genre by id", e);
+            throw new OperationException("Error deleting genre by id", e);
         }
         return result;
     }
@@ -86,7 +87,7 @@ public class GenreEntityRepositoryImpl implements GenreEntityRepository {
                 genreEntityList.add(genreResultSetMapper.map(resultSet));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error finding all genres", e);
+            throw new OperationException("Error finding all genres", e);
         }
 
         return genreEntityList;
@@ -109,7 +110,7 @@ public class GenreEntityRepositoryImpl implements GenreEntityRepository {
                 );
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error saving genre", e);
+            throw new OperationException("Error saving genre", e);
         }
         return genreEntity;
     }
@@ -123,7 +124,7 @@ public class GenreEntityRepositoryImpl implements GenreEntityRepository {
             preparedStatement.setLong(2, genreEntity.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Error updating genre"+genreEntity.getId(), e);
+            throw new OperationException("Error updating genre"+genreEntity.getId(), e);
         }
         return genreEntity;
     }
@@ -139,7 +140,7 @@ public class GenreEntityRepositoryImpl implements GenreEntityRepository {
                 return resultSet.getBoolean(1);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error checking genre exists", e);
+            throw new OperationException("Error checking genre exists", e);
         }
         return false;
     }

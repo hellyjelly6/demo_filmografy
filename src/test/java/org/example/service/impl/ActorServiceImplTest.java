@@ -101,7 +101,7 @@ class ActorServiceImplTest {
     }
 
     @Test
-    void findByIdNotFound() throws NotFoundException {
+    void findByIdNotFound()  {
         when(mockActorEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> actorService.findById(1L));
@@ -151,7 +151,7 @@ class ActorServiceImplTest {
     }
 
     @Test
-    void updateNotFound() throws NotFoundException {
+    void updateNotFound()  {
         when(mockActorEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> actorService.update(actorIncomingDto, 1L));
@@ -174,7 +174,7 @@ class ActorServiceImplTest {
     }
 
     @Test
-    void deleteNotFound() throws NotFoundException {
+    void deleteNotFound()  {
         when(mockActorEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> actorService.delete(1L));

@@ -2,8 +2,8 @@ package org.example.db;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.example.exception.OperationException;
 
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -19,7 +19,7 @@ public class ConnectionManagerImpl implements ConnectionManager {
         try {
             Class.forName(DRIVER_NAME);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Sorry, driver not found", e);
+            throw new OperationException("Sorry, driver not found", e);
         }
     }
 
@@ -30,9 +30,8 @@ public class ConnectionManagerImpl implements ConnectionManager {
             initialize(properties.getProperty("dbUrl"),
                     properties.getProperty("dbUsername"),
                     properties.getProperty("dbPassword"));
-                    //properties.getProperty("dbDriverClassName"));
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load database configuration", e);
+            throw new OperationException("Failed to load database configuration", e);
         }
     }
 
@@ -46,7 +45,6 @@ public class ConnectionManagerImpl implements ConnectionManager {
         config.setJdbcUrl(url);
         config.setUsername(username);
         config.setPassword(password);
-        //config.setDriverClassName(driverClassName);
         config.setMaximumPoolSize(10);
         config.setIdleTimeout(50000);
         dataSource = new HikariDataSource(config);

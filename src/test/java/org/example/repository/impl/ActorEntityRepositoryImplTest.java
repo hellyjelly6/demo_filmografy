@@ -1,7 +1,5 @@
 package org.example.repository.impl;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import org.example.db.ConnectionManagerImpl;
 import org.example.model.ActorEntity;
 import org.example.repository.ActorEntityRepository;
@@ -10,12 +8,9 @@ import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,7 +32,6 @@ class ActorEntityRepositoryImplTest {
         connectionManager = new ConnectionManagerImpl(mysqlContainer.getJdbcUrl() + "?useSSL=false&serverTimezone=Europe/Moscow",
                 mysqlContainer.getUsername(),
                 mysqlContainer.getPassword());
-                //mysqlContainer.getDriverClassName());
         try(Connection connection = connectionManager.getConnection()) {
             actorEntityRepository = new ActorEntityRepositoryImpl(connectionManager);
         }

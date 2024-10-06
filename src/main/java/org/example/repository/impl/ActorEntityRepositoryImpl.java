@@ -2,6 +2,7 @@ package org.example.repository.impl;
 
 import org.example.db.ConnectionManager;
 import org.example.db.ConnectionManagerImpl;
+import org.example.exception.OperationException;
 import org.example.model.ActorEntity;
 import org.example.repository.ActorEntityRepository;
 import org.example.repository.ActorToMovieEntityRepository;
@@ -37,7 +38,7 @@ public class ActorEntityRepositoryImpl implements ActorEntityRepository {
 
 
     @Override
-    public ActorEntity findById(Long id) {
+    public ActorEntity findById(Long id){
         ActorEntity actorEntity = null;
         try(Connection connection = connectionManager.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(ActorSQLQuery.FIND_BY_ID_SQL.getQuery())) {
@@ -48,7 +49,7 @@ public class ActorEntityRepositoryImpl implements ActorEntityRepository {
                 actorEntity = actorResultSetMapper.map(resultSet);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error finding actor by id", e);
+            throw new OperationException("Error finding actor by id", e);
         }
         return actorEntity;
     }
@@ -66,7 +67,7 @@ public class ActorEntityRepositoryImpl implements ActorEntityRepository {
 
             result =  affectedRows > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Error deleting actor by id" + e.getMessage(), e);
+            throw new OperationException("Error deleting actor by id" + e.getMessage(), e);
         }
         return result;
     }
@@ -82,7 +83,7 @@ public class ActorEntityRepositoryImpl implements ActorEntityRepository {
                 actorList.add(actorResultSetMapper.map(resultSet));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error finding all actors", e);
+            throw new OperationException("Error finding all actors", e);
         }
         return actorList;
     }
@@ -109,7 +110,7 @@ public class ActorEntityRepositoryImpl implements ActorEntityRepository {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error saving actor",e);
+            throw new OperationException("Error saving actor",e);
         }
         return actorEntity;
     }
@@ -126,7 +127,7 @@ public class ActorEntityRepositoryImpl implements ActorEntityRepository {
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error updating actor", e);
+            throw new OperationException("Error updating actor", e);
         }
         return actorEntity;
     }
@@ -141,7 +142,7 @@ public class ActorEntityRepositoryImpl implements ActorEntityRepository {
                 return resultSet.getBoolean(1);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error checking actor exists", e);
+            throw new OperationException("Error checking actor exists", e);
         }
         return false;
     }

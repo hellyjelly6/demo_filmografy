@@ -112,7 +112,7 @@ class MovieServiceImplTest {
     }
 
     @Test
-    void findByIdNotFound() throws NotFoundException {
+    void findByIdNotFound()  {
         when(mockmovieEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> movieService.findById(1L));
@@ -195,7 +195,7 @@ class MovieServiceImplTest {
     }
 
     @Test
-    void updateNotFound() throws NotFoundException {
+    void updateNotFound() {
         when(mockmovieEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> movieService.update(movieIncomingDto, 1L));
@@ -218,7 +218,7 @@ class MovieServiceImplTest {
     }
 
     @Test
-    void deleteNotFound() throws NotFoundException {
+    void deleteNotFound() {
         when(mockmovieEntityRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> movieService.delete(1L));

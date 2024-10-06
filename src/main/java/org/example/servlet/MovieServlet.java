@@ -17,8 +17,8 @@ import java.util.List;
 
 @WebServlet(urlPatterns = {"/movie/*"})
 public class MovieServlet extends HttpServlet {
-    private MovieService movieService;
-    Gson gson = new Gson();
+    private transient MovieService movieService;
+    private transient Gson gson = new Gson();
 
     public MovieServlet() {}
 
@@ -77,7 +77,7 @@ public class MovieServlet extends HttpServlet {
             }
             else{
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response = "Illegal Request";
+                response = "Illegal Request, movie is null";
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
