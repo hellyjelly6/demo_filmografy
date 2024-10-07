@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class GenreEntityRepositoryImplTest {
     @Container
     // Инициализируем MySQL контейнер с Testcontainers, используя данные из db.properties
-    public static MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0")
+    public static MySQLContainer<?> mysqlContainerdemo = new MySQLContainer<>("mysql:8.0")
             .withDatabaseName("filmografy")
             .withUsername("test") // Используем username из db.properties
             .withPassword("test") // Используем password из db.properties
@@ -30,9 +30,9 @@ class GenreEntityRepositoryImplTest {
 
     @BeforeEach
     public void setUp() throws SQLException {
-        connectionManager = new ConnectionManagerImpl(mysqlContainer.getJdbcUrl() + "?useSSL=false&serverTimezone=Europe/Moscow",
-                mysqlContainer.getUsername(),
-                mysqlContainer.getPassword());
+        connectionManager = new ConnectionManagerImpl(mysqlContainerdemo.getJdbcUrl() + "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Moscow",
+                mysqlContainerdemo.getUsername(),
+                mysqlContainerdemo.getPassword());
         try(Connection connection = connectionManager.getConnection()) {
             genreRepository = new GenreEntityRepositoryImpl(connectionManager, new GenreResultSetMapperImpl());
         }
