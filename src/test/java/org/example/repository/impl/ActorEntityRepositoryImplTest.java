@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Testcontainers
 class ActorEntityRepositoryImplTest {
     @Container
-    public static MySQLContainer<?> mysqlContainerdemo = new MySQLContainer<>("mysql:8.0")
+    public static MySQLContainer<?> mysqlContainerDemo = new MySQLContainer<>("mysql:8.0")
             .withDatabaseName("filmografy")
             .withUsername("test") // Используем username из db.properties
             .withPassword("test") // Используем password из db.properties
@@ -29,9 +29,10 @@ class ActorEntityRepositoryImplTest {
 
     @BeforeEach
     public void setUp() throws SQLException {
-        connectionManager = new ConnectionManagerImpl(mysqlContainerdemo.getJdbcUrl() + "?serverTimezone=Europe/Moscow",
-                mysqlContainerdemo.getUsername(),
-                mysqlContainerdemo.getPassword());
+        connectionManager = new ConnectionManagerImpl(mysqlContainerDemo.getJdbcUrl() + "?serverTimezone=Europe/Moscow",
+                mysqlContainerDemo.getUsername(),
+                mysqlContainerDemo.getPassword(),
+                mysqlContainerDemo.getDriverClassName());
         try(Connection connection = connectionManager.getConnection()) {
             actorEntityRepository = new ActorEntityRepositoryImpl(connectionManager);
         }

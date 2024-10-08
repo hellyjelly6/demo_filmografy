@@ -13,38 +13,30 @@ import java.util.Properties;
 public class ConnectionManagerImpl implements ConnectionManager {
     private HikariDataSource dataSource;
 
-    private static final String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
-
-    static {
-        try {
-            Class.forName(DRIVER_NAME);
-        } catch (ClassNotFoundException e) {
-            throw new OperationException("Sorry, driver not found", e);
-        }
-    }
-
     public ConnectionManagerImpl() {
         Properties properties = new Properties();
         try (InputStream input = ConnectionManagerImpl.class.getClassLoader().getResourceAsStream("db.properties")) {
             properties.load(input);
             initialize(properties.getProperty("dbUrl"),
                     properties.getProperty("dbUsername"),
-                    properties.getProperty("dbPassword"));
+                    properties.getProperty("dbPassword"),
+                    properties.getProperty("dbDriverClassName"));
         } catch (IOException e) {
             throw new OperationException("Failed to load database configuration", e);
         }
     }
 
-    public ConnectionManagerImpl(String url, String username, String password) {
-        initialize(url, username, password);
+    public ConnectionManagerImpl(String url, String username, String password, String driverClassName) {
+        initialize(url, username, password, driverClassName);
     }
 
 
-    private void initialize(String url, String username, String password) {
+    private void initialize(String url, String username, String password, String driverClassName) {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(url);
         config.setUsername(username);
         config.setPassword(password);
+        config.setDriverClassName(driverClassName);
         config.setMaximumPoolSize(10);
         config.setIdleTimeout(50000);
         dataSource = new HikariDataSource(config);
