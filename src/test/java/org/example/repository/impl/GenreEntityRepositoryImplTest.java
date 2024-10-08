@@ -30,7 +30,7 @@ class GenreEntityRepositoryImplTest {
 
     @BeforeEach
     public void setUp() throws SQLException {
-        connectionManager = new ConnectionManagerImpl(mysqlContainerdemo.getJdbcUrl() + "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Moscow",
+        connectionManager = new ConnectionManagerImpl(mysqlContainerdemo.getJdbcUrl() + "?serverTimezone=Europe/Moscow",
                 mysqlContainerdemo.getUsername(),
                 mysqlContainerdemo.getPassword());
         try(Connection connection = connectionManager.getConnection()) {
