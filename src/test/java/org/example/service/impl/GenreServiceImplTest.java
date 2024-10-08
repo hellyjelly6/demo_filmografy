@@ -7,12 +7,9 @@ import org.example.repository.MovieEntityRepository;
 import org.example.servlet.dto.GenreIncomingDto;
 import org.example.servlet.dto.GenreOutGoingDto;
 import org.example.servlet.mapper.GenreDtoMapper;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 
 import java.util.List;
 
@@ -21,27 +18,20 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
 class GenreServiceImplTest {
-    @Mock
     private GenreEntityRepository mockGenreEntityRepository;
-
-    @Mock
     private GenreDtoMapper mockDtoMapper;
-
-    @Mock
     private MovieEntityRepository mockMovieEntityRepository;
-
-    @InjectMocks
     private GenreServiceImpl genreService;
 
-    private AutoCloseable closeable;
     private GenreEntity genreEntity;
     private GenreOutGoingDto genreOutGoingDto;
     private GenreIncomingDto genreIncomingDto;
 
     @BeforeEach
     void setUp() {
-        // Инициализация моков
-        closeable = MockitoAnnotations.openMocks(this);
+        mockGenreEntityRepository = Mockito.mock(GenreEntityRepository.class);
+        mockDtoMapper = Mockito.mock(GenreDtoMapper.class);
+        mockMovieEntityRepository = Mockito.mock(MovieEntityRepository.class);
         genreService = new GenreServiceImpl(mockGenreEntityRepository, mockDtoMapper);
 
         genreIncomingDto = new GenreIncomingDto("genre1");
@@ -49,11 +39,6 @@ class GenreServiceImplTest {
         genreOutGoingDto = new GenreOutGoingDto(1L, "genre1", List.of());
     }
 
-    @AfterEach
-    void tearDown() throws Exception {
-        // Закрытие моков после теста
-        closeable.close();
-    }
 
     @Test
     void findAll() {

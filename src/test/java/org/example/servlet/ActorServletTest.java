@@ -10,12 +10,9 @@ import org.example.exception.NotFoundException;
 import org.example.service.ActorService;
 import org.example.servlet.dto.ActorIncomingDto;
 import org.example.servlet.dto.ActorOutGoingDto;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 
 import java.io.*;
 import java.util.Arrays;
@@ -27,16 +24,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class ActorServletTest {
-    @Mock
     private ActorService mockActorService;
-
-    @Mock
     private HttpServletRequest mockRequest;
-
-    @Mock
     private HttpServletResponse mockResponse;
-
-    @InjectMocks
     private ActorServlet actorServlet;
 
     private StringWriter stringWriter;
@@ -45,19 +35,16 @@ class ActorServletTest {
             .registerTypeAdapter(java.sql.Date.class, new SqlDateDeserializer()) // Десериализация
             .registerTypeAdapter(java.sql.Date.class, new SqlDateSerializer())   // Сериализация
             .create();
-    private AutoCloseable closeable;
 
     @BeforeEach
     void setUp() throws IOException {
-        closeable = MockitoAnnotations.openMocks(this);
+        mockActorService = Mockito.mock(ActorService.class);
         actorServlet = new ActorServlet(mockActorService);
+        mockRequest = Mockito.mock(HttpServletRequest.class);
+        mockResponse = Mockito.mock(HttpServletResponse.class);
         stringWriter = new StringWriter();
         printWriter = new PrintWriter(stringWriter);
         when(mockResponse.getWriter()).thenReturn(printWriter);
-    }
-    @AfterEach
-    void tearDown() throws Exception {
-        closeable.close();  // Закрытие моков
     }
 
     @Test

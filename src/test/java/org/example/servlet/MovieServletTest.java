@@ -9,12 +9,9 @@ import org.example.service.MovieService;
 import org.example.servlet.dto.ActorLimitedDto;
 import org.example.servlet.dto.MovieIncomingDto;
 import org.example.servlet.dto.MovieOutGoingDto;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 
 import java.io.*;
 import java.util.Arrays;
@@ -27,37 +24,26 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class MovieServletTest {
-    @Mock
     private static MovieService mockMovieService;
-
-    @Mock
     private static HttpServletRequest mockRequest;
-
-    @Mock
     private static HttpServletResponse mockResponse;
-
-    @InjectMocks
     private static MovieServlet movieServlet;
 
     private StringWriter stringWriter;
     private PrintWriter writer;
 
     private Gson gson;
-    private AutoCloseable closeable;
 
     @BeforeEach
     void setUp() throws IOException {
-        closeable = MockitoAnnotations.openMocks(this);
+        mockMovieService = Mockito.mock(MovieService.class);
         movieServlet = new MovieServlet(mockMovieService);
+        mockRequest = Mockito.mock(HttpServletRequest.class);
+        mockResponse = Mockito.mock(HttpServletResponse.class);
         stringWriter = new StringWriter();
         writer = new PrintWriter(stringWriter);
         gson = new Gson();
         when(mockResponse.getWriter()).thenReturn(writer);
-    }
-
-    @AfterEach
-    void tearDown() throws Exception {
-        closeable.close();
     }
 
     @Test
