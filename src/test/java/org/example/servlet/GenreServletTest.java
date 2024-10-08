@@ -9,9 +9,7 @@ import org.example.servlet.dto.GenreIncomingDto;
 import org.example.servlet.dto.GenreOutGoingDto;
 import org.example.servlet.dto.MovieLimitedDto;
 import org.junit.jupiter.api.*;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 
 import java.io.*;
 import java.util.Arrays;
@@ -24,37 +22,26 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class GenreServletTest {
-    @Mock
     private static GenreService mockGenreService;
-
-    @Mock
     private HttpServletRequest mockRequest;
-
-    @Mock
     private HttpServletResponse mockResponse;
-
-    @InjectMocks
     private static GenreServlet genreServlet;
 
     private StringWriter stringWriter;
     private PrintWriter writer;
 
     private Gson gson;
-    private AutoCloseable closeable;
 
     @BeforeEach
     void setUp() throws IOException {
-        closeable = MockitoAnnotations.openMocks(this);
+        mockGenreService = Mockito.mock(GenreService.class);
         genreServlet = new GenreServlet(mockGenreService);
+        mockRequest = Mockito.mock(HttpServletRequest.class);
+        mockResponse = Mockito.mock(HttpServletResponse.class);
         stringWriter = new StringWriter();
         writer = new PrintWriter(stringWriter);
         gson = new Gson();
         when(mockResponse.getWriter()).thenReturn(writer);
-    }
-
-    @AfterEach
-    void tearDown() throws Exception {
-        closeable.close();  // Закрытие моков
     }
 
     @Test

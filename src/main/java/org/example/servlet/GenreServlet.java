@@ -29,7 +29,9 @@ public class GenreServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        genreService = new GenreServiceImpl();
+        if (genreService == null) {
+            this.genreService = new GenreServiceImpl();  // Only initialize if not already set
+        }
     }
 
     @Override

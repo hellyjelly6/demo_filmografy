@@ -28,7 +28,9 @@ public class MovieServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        movieService = new MovieServiceImpl();
+        if (movieService == null) {
+            this.movieService = new MovieServiceImpl();
+        }
     }
 
     @Override

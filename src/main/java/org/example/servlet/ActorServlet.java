@@ -35,7 +35,9 @@ public class ActorServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        this.actorService = new ActorServiceImpl();
+        if(actorService == null) {
+            this.actorService = new ActorServiceImpl();
+        }
     }
 
 

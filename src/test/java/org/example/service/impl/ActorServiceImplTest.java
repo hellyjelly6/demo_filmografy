@@ -7,12 +7,9 @@ import org.example.repository.ActorToMovieEntityRepository;
 import org.example.servlet.dto.ActorIncomingDto;
 import org.example.servlet.dto.ActorOutGoingDto;
 import org.example.servlet.mapper.ActorDtoMapper;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 
 import java.util.List;
 
@@ -21,37 +18,25 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
 class ActorServiceImplTest {
-
-    @Mock
     private ActorEntityRepository mockActorEntityRepository;
-
-    @Mock
     private ActorToMovieEntityRepository mockActorToMovieEntityRepository;
-
-    @Mock
     private ActorDtoMapper mockActorDtoMapper;
-
-    @InjectMocks
     private ActorServiceImpl actorService;
 
-    private AutoCloseable closeable;
     private ActorEntity actorEntity;
     private ActorIncomingDto actorIncomingDto;
     private ActorOutGoingDto actorOutGoingDto;
 
     @BeforeEach
     void setUp() {
-        closeable = MockitoAnnotations.openMocks(this);
+        mockActorEntityRepository = Mockito.mock(ActorEntityRepository.class);
+        mockActorToMovieEntityRepository = Mockito.mock(ActorToMovieEntityRepository.class);
+        mockActorDtoMapper = Mockito.mock(ActorDtoMapper.class);
         actorService = new ActorServiceImpl(mockActorEntityRepository, mockActorToMovieEntityRepository, mockActorDtoMapper);
 
         actorIncomingDto = new ActorIncomingDto("Эмилия", "Кларк", java.sql.Date.valueOf("1986-10-23") );
         actorEntity = new ActorEntity(1L, "Эмилия", "Кларк", java.sql.Date.valueOf("1986-10-23"), List.of());
         actorOutGoingDto = new ActorOutGoingDto(1L, "Эмилия", "Кларк", java.sql.Date.valueOf("1986-10-23"), List.of());
-    }
-
-    @AfterEach
-    void tearDown() throws Exception {
-        closeable.close();
     }
 
     @Test

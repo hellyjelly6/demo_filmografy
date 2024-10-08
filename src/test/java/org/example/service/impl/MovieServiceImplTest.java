@@ -11,12 +11,9 @@ import org.example.servlet.dto.MovieIncomingDto;
 import org.example.servlet.dto.MovieOutGoingDto;
 import org.example.servlet.mapper.ActorDtoMapper;
 import org.example.servlet.mapper.MovieDtoMapper;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,29 +23,22 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
 class MovieServiceImplTest {
-    @Mock
     private MovieEntityRepository mockmovieEntityRepository;
-
-    @Mock
     private ActorToMovieEntityRepository mockactorToMovieEntityRepository;
-
-    @Mock
     private ActorDtoMapper mockactorDtoMapper;
-
-    @Mock
     private MovieDtoMapper mockmovieDtoMapper;
-
-    @InjectMocks
     private MovieServiceImpl movieService;
 
-    private AutoCloseable closeable;
     private MovieEntity movieEntity;
     private MovieIncomingDto movieIncomingDto;
     private MovieOutGoingDto movieOutGoingDto;
 
     @BeforeEach
     void setUp() {
-        closeable = MockitoAnnotations.openMocks(this);
+        mockmovieEntityRepository = Mockito.mock(MovieEntityRepository.class);
+        mockactorToMovieEntityRepository = Mockito.mock(ActorToMovieEntityRepository.class);
+        mockactorDtoMapper = Mockito.mock(ActorDtoMapper.class);
+        mockmovieDtoMapper = Mockito.mock(MovieDtoMapper.class);
         movieService = new MovieServiceImpl(mockmovieEntityRepository, mockactorDtoMapper, mockmovieDtoMapper, mockactorToMovieEntityRepository);
 
         movieIncomingDto = new MovieIncomingDto("Титаник", 1997, new GenreEntity());
@@ -56,10 +46,6 @@ class MovieServiceImplTest {
         movieOutGoingDto = new MovieOutGoingDto(1L, "Титаник", 1997, new GenreEntity(), List.of());
     }
 
-    @AfterEach
-    void tearDown() throws Exception {
-        closeable.close();
-    }
 
     @Test
     void findAll() {
