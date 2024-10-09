@@ -5,6 +5,7 @@ import org.example.repository.mapper.GenreResultSetMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class GenreResultSetMapperImpl implements GenreResultSetMapper {
     @Override
@@ -12,7 +13,7 @@ public class GenreResultSetMapperImpl implements GenreResultSetMapper {
         return new GenreEntity(
                 resultSet.getLong("id"),
                 resultSet.getString("genre_name"),
-                null
+                new ArrayList<>()
         );
     }
 }

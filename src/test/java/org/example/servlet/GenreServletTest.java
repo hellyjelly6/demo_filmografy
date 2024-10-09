@@ -180,7 +180,7 @@ class GenreServletTest {
         verify(mockResponse).setStatus(HttpServletResponse.SC_BAD_REQUEST);
         writer.flush();
         String actualResponse = stringWriter.toString();
-        String expectedResponse = "Bad Request";
+        String expectedResponse = "Bad Request: Unexpected error";
 
         assertEquals(expectedResponse, actualResponse);
     }

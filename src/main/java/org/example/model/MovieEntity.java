@@ -13,8 +13,6 @@ import java.util.List;
  */
 public class MovieEntity {
 
-    private static final ActorToMovieEntityRepository actorToMovieRepository = new ActorToMovieEntityRepositoryImpl();
-
     private Long id;
     private String title;
     private int releaseYear;
@@ -47,13 +45,12 @@ public class MovieEntity {
     public void setGenre(GenreEntity genre) {this.genre = genre;}
 
     public List<ActorEntity> getActors() {
-        if(actors == null) {
-            actors = actorToMovieRepository.findActorsByMovieId(this.id);
-        }
-        return actors;
+        return actors == null ? new ArrayList<>() : actors;
     }
 
-    public void setActors(List<ActorEntity> actors) {this.actors = actors;}
+    public void setActors(List<ActorEntity> actors) {
+        this.actors = actors != null ? actors : new ArrayList<>();
+    }
 
 }
 

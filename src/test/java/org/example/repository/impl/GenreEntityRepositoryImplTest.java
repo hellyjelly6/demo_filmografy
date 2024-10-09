@@ -35,7 +35,7 @@ class GenreEntityRepositoryImplTest {
                 mysqlContainerDemo.getPassword(),
                 mysqlContainerDemo.getDriverClassName());
         try(Connection connection = connectionManager.getConnection()) {
-            genreRepository = new GenreEntityRepositoryImpl(connectionManager, new GenreResultSetMapperImpl());
+            genreRepository = new GenreEntityRepositoryImpl(connectionManager);
         }
     }
 

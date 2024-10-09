@@ -13,7 +13,6 @@ import java.util.Objects;
  * Many To One: MovieEntity -> GenreEntity
  */
 public class GenreEntity {
-    private static MovieEntityRepository movieRepository = new MovieEntityRepositoryImpl();
     private Long id;
     private String name;
     private List<MovieEntity> movies = new ArrayList<>();
@@ -33,11 +32,11 @@ public class GenreEntity {
     public void setName(String name) {this.name = name;}
 
     public List<MovieEntity> getMovies() {
-        if(movies == null)
-            movies = movieRepository.findMoviesByGenreId(this.id);
-        return movies;
+        return movies == null ? new ArrayList<>() : movies;
     }
-    public void setMovies(List<MovieEntity> movies) {this.movies = movies;}
+    public void setMovies(List<MovieEntity> movies) {
+        this.movies = movies != null ? movies : new ArrayList<>();
+    }
 
     @Override
     public boolean equals(Object o) {

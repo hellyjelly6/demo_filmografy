@@ -5,6 +5,7 @@ import org.example.repository.mapper.ActorResultSetMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class ActorResultSetMapperImpl implements ActorResultSetMapper {
     @Override
@@ -14,7 +15,7 @@ public class ActorResultSetMapperImpl implements ActorResultSetMapper {
                 resultSet.getString("first_name"),
                 resultSet.getString("last_name"),
                 resultSet.getDate("birthdate"),
-                null
+                new ArrayList<>()
         );
     }
 }

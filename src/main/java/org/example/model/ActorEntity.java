@@ -13,7 +13,6 @@ import java.util.List;
  * Many To Many: ActorEntity <-> MovieEntity
  */
 public class ActorEntity {
-    private static ActorToMovieEntityRepository actorToMovieRepository = new ActorToMovieEntityRepositoryImpl();
 
     private Long id;
     private String firstName;
@@ -46,10 +45,10 @@ public class ActorEntity {
     public void setBirthDate(Date birthDate) {this.birthDate = birthDate;}
 
     public List<MovieEntity> getMovies() {
-        if(movies == null)
-            movies = actorToMovieRepository.findMoviesByActorId(this.id);
-        return movies;
+        return movies == null ? new ArrayList<>() : movies;
     }
-    public void setMovies(List<MovieEntity> movies) {this.movies = movies;}
+    public void setMovies(List<MovieEntity> movies) {
+        this.movies = movies != null ? movies : new ArrayList<>();
+    }
 
 }

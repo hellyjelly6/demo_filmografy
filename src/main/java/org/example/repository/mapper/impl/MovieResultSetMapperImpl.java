@@ -9,6 +9,7 @@ import org.example.repository.mapper.MovieResultSetMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class MovieResultSetMapperImpl implements MovieResultSetMapper {
 
@@ -24,6 +25,6 @@ public class MovieResultSetMapperImpl implements MovieResultSetMapper {
         resultSet.getString("title"),
         resultSet.getInt("release_year"),
         genreEntity,
-        null);
+        new ArrayList<>());
     }
 }

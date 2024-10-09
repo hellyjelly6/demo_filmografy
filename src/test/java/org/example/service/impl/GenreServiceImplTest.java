@@ -32,7 +32,7 @@ class GenreServiceImplTest {
         mockGenreEntityRepository = Mockito.mock(GenreEntityRepository.class);
         mockDtoMapper = Mockito.mock(GenreDtoMapper.class);
         mockMovieEntityRepository = Mockito.mock(MovieEntityRepository.class);
-        genreService = new GenreServiceImpl(mockGenreEntityRepository, mockDtoMapper);
+        genreService = new GenreServiceImpl(mockGenreEntityRepository, mockDtoMapper, mockMovieEntityRepository);
 
         genreIncomingDto = new GenreIncomingDto("genre1");
         genreEntity = new GenreEntity(1L, "genre1", List.of());

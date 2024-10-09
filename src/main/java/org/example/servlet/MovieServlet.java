@@ -79,7 +79,7 @@ public class MovieServlet extends HttpServlet {
             }
             else{
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response = "Illegal Request, movie is null";
+                response = "Illegal Request";
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

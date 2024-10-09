@@ -3,7 +3,9 @@ package org.example.service.impl;
 import org.example.exception.NotFoundException;
 import org.example.model.GenreEntity;
 import org.example.repository.GenreEntityRepository;
+import org.example.repository.MovieEntityRepository;
 import org.example.repository.impl.GenreEntityRepositoryImpl;
+import org.example.repository.impl.MovieEntityRepositoryImpl;
 import org.example.service.GenreService;
 import org.example.servlet.dto.GenreIncomingDto;
 import org.example.servlet.dto.GenreOutGoingDto;
@@ -14,21 +16,27 @@ import java.util.List;
 
 public class GenreServiceImpl implements GenreService {
     private GenreEntityRepository genreEntityRepository;
+    private MovieEntityRepository movieEntityRepository;
     private GenreDtoMapper genreDtoMapper;
 
     public GenreServiceImpl() {
         genreEntityRepository = new GenreEntityRepositoryImpl();
+        movieEntityRepository = new MovieEntityRepositoryImpl();
         genreDtoMapper = new GenreDtoMapperImpl();
     }
 
-    public GenreServiceImpl(GenreEntityRepository genreEntityRepository, GenreDtoMapper genreDtoMapper) {
+    public GenreServiceImpl(GenreEntityRepository genreEntityRepository, GenreDtoMapper genreDtoMapper, MovieEntityRepository movieEntityRepository) {
         this.genreEntityRepository = genreEntityRepository;
         this.genreDtoMapper = genreDtoMapper;
+        this.movieEntityRepository = movieEntityRepository;
     }
 
     @Override
     public List<GenreOutGoingDto> findAll() {
         List<GenreEntity> genreEntities = genreEntityRepository.findAll();
+        for (GenreEntity genreEntity : genreEntities) {
+            genreEntity.setMovies(movieEntityRepository.findMoviesByGenreId(genreEntity.getId()));
+        }
         return genreDtoMapper.map(genreEntities);
     }
 
@@ -36,6 +44,7 @@ public class GenreServiceImpl implements GenreService {
     public GenreOutGoingDto findById(Long id) throws NotFoundException {
         exists(id);
         GenreEntity genreEntity = genreEntityRepository.findById(id);
+        genreEntity.setMovies(movieEntityRepository.findMoviesByGenreId(genreEntity.getId()));
         return genreDtoMapper.map(genreEntity);
     }
 
@@ -52,6 +61,7 @@ public class GenreServiceImpl implements GenreService {
         GenreEntity genreEntity = genreDtoMapper.map(genreIncomingDto);
         genreEntity.setId(id);
         genreEntity = genreEntityRepository.update(genreEntity);
+        genreEntity.setMovies(movieEntityRepository.findMoviesByGenreId(genreEntity.getId()));
         return genreDtoMapper.map(genreEntity);
     }
 

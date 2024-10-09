@@ -34,6 +34,9 @@ public class ActorServiceImpl implements ActorService {
     @Override
     public List<ActorOutGoingDto> findAll() {
         List<ActorEntity> actorEntities = actorEntityRepository.findAll();
+        for (ActorEntity actorEntity : actorEntities) {
+            actorEntity.setMovies(actorToMovieEntityRepository.findMoviesByActorId(actorEntity.getId()));
+        }
         return actorDtoMapper.mapList(actorEntities);
     }
 
@@ -41,6 +44,7 @@ public class ActorServiceImpl implements ActorService {
     public ActorOutGoingDto findById(Long id) throws NotFoundException {
         exists(id);
         ActorEntity actorEntity = actorEntityRepository.findById(id);
+        actorEntity.setMovies(actorToMovieEntityRepository.findMoviesByActorId(actorEntity.getId()));
         return actorDtoMapper.map(actorEntity);
     }
 
@@ -48,6 +52,7 @@ public class ActorServiceImpl implements ActorService {
     public ActorOutGoingDto save(ActorIncomingDto actorIncomingDto) {
         ActorEntity actorEntity = actorDtoMapper.map(actorIncomingDto);
         actorEntity = actorEntityRepository.save(actorEntity);
+        actorEntity.setMovies(actorToMovieEntityRepository.findMoviesByActorId(actorEntity.getId()));
         return actorDtoMapper.map(actorEntity);
     }
 
@@ -57,6 +62,7 @@ public class ActorServiceImpl implements ActorService {
         ActorEntity actorEntity = actorDtoMapper.map(actorIncomingDto);
         actorEntity.setId(id);
         ActorEntity updated = actorEntityRepository.update(actorEntity);
+        updated.setMovies(actorToMovieEntityRepository.findMoviesByActorId(actorEntity.getId()));
         return actorDtoMapper.map(updated);
     }
 

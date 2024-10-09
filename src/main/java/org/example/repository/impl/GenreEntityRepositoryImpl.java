@@ -5,6 +5,7 @@ import org.example.db.ConnectionManagerImpl;
 import org.example.exception.OperationException;
 import org.example.model.GenreEntity;
 import org.example.repository.GenreEntityRepository;
+import org.example.repository.MovieEntityRepository;
 import org.example.repository.SQLQuery.GenreSQLQuery;
 import org.example.repository.mapper.GenreResultSetMapper;
 import org.example.repository.mapper.impl.GenreResultSetMapperImpl;
@@ -14,24 +15,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GenreEntityRepositoryImpl implements GenreEntityRepository {
-
     private final ConnectionManager connectionManager;
     private final GenreResultSetMapper genreResultSetMapper;
+    private final MovieEntityRepository movieEntityRepository;
 
     public GenreEntityRepositoryImpl() {
         this.connectionManager = new ConnectionManagerImpl();
         this.genreResultSetMapper = new GenreResultSetMapperImpl();
+        this.movieEntityRepository = new MovieEntityRepositoryImpl(this.connectionManager);
     }
 
     public GenreEntityRepositoryImpl(ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
         this.genreResultSetMapper = new GenreResultSetMapperImpl();
+        this.movieEntityRepository = new MovieEntityRepositoryImpl(this.connectionManager);
     }
 
-    public GenreEntityRepositoryImpl(ConnectionManager connectionManager, GenreResultSetMapper genreResultSetMapper) {
-        this.connectionManager = connectionManager;
-        this.genreResultSetMapper = genreResultSetMapper;
-    }
 
     public ConnectionManager getConnectionManager() {
         return connectionManager;
@@ -49,7 +48,6 @@ public class GenreEntityRepositoryImpl implements GenreEntityRepository {
             if(resultSet.next()){
                 genreEntity = genreResultSetMapper.map(resultSet);
             }
-
         } catch (SQLException e) {
             throw new OperationException("Error finding genre by id", e);
         }
@@ -58,7 +56,6 @@ public class GenreEntityRepositoryImpl implements GenreEntityRepository {
 
     @Override
     public boolean deleteById(Long id) {
-        MovieEntityRepositoryImpl movieEntityRepository = new MovieEntityRepositoryImpl(this.connectionManager);
         boolean result = false;
         try(Connection connection = connectionManager.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(GenreSQLQuery.DELETE_SQL.getQuery())){
@@ -110,7 +107,7 @@ public class GenreEntityRepositoryImpl implements GenreEntityRepository {
                 );
             }
         } catch (SQLException e) {
-            throw new OperationException("Error saving genre", e);
+            throw new OperationException("Error saving genre", e.getCause());
         }
         return genreEntity;
     }
