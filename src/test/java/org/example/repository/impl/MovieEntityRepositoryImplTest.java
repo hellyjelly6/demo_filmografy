@@ -23,7 +23,7 @@ class MovieEntityRepositoryImplTest {
     public static MySQLContainer<?> mysqlContainerDemo = new MySQLContainer<>("mysql:8.0")
             .withDatabaseName("filmografy")
             .withUsername("test") // Используем username из db.properties
-            .withPassword("test") // Используем password из db.properties
+            .withPassword("test")// Используем password из db.properties
             .withInitScript("SQL/initialization.sql"); // SQL-скрипт для инициализации данных
 
     private MovieEntityRepository movieEntityRepository;

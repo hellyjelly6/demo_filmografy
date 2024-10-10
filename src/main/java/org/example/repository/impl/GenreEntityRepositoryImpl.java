@@ -100,14 +100,15 @@ public class GenreEntityRepositoryImpl implements GenreEntityRepository {
 
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if(generatedKeys.next()){
+                Long id = generatedKeys.getLong(1);
                 genreEntity = new GenreEntity(
-                        generatedKeys.getLong(1),
+                        id,
                         genreEntity.getName(),
-                        null
+                        new ArrayList<>()
                 );
             }
         } catch (SQLException e) {
-            throw new OperationException("Error saving genre", e.getCause());
+            throw new OperationException("Error saving genre", e);
         }
         return genreEntity;
     }

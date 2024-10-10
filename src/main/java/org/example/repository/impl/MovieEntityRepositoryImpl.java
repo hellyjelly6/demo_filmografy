@@ -103,12 +103,13 @@ public class MovieEntityRepositoryImpl implements MovieEntityRepository {
 
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if(generatedKeys.next()){
+                Long id = generatedKeys.getLong(1);
                 movieEntity = new MovieEntity(
-                        generatedKeys.getLong(1),
+                        id,
                         movieEntity.getTitle(),
                         movieEntity.getReleaseYear(),
                         movieEntity.getGenre(),
-                        null
+                        new ArrayList<>()
                 );
 
             }

@@ -1,7 +1,5 @@
 package org.example.model;
 
-import org.example.repository.MovieEntityRepository;
-import org.example.repository.impl.MovieEntityRepositoryImpl;
 
 import java.util.ArrayList;
 import java.util.List;

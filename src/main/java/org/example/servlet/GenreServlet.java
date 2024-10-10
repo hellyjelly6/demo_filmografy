@@ -18,7 +18,7 @@ import java.util.List;
 
 @WebServlet(urlPatterns = {"/genre/*"})
 public class GenreServlet extends HttpServlet {
-    private final transient Gson gson = new Gson();
+    private transient Gson gson = new Gson();
     private transient GenreService genreService;
 
     public GenreServlet() {}

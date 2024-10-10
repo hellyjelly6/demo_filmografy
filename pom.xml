@@ -114,6 +114,6 @@
     </dependencies>
 
     <build>
-    <finalName>filmografy</finalName>
+    <finalName>demoFilmografy</finalName>
     </build>
 </project>
