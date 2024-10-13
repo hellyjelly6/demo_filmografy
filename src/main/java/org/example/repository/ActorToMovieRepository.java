@@ -5,7 +5,7 @@ import org.example.model.MovieEntity;
 
 import java.util.List;
 
-public interface ActorToMovieEntityRepository  {
+public interface ActorToMovieRepository {
     boolean deleteByMovieId(Long id);
 
     boolean deleteByActorId(Long id);

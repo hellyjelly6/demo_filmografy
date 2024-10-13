@@ -2,7 +2,7 @@ package org.example.repository.impl;
 
 import org.example.db.ConnectionManagerImpl;
 import org.example.model.GenreEntity;
-import org.example.repository.GenreEntityRepository;
+import org.example.repository.GenreRepository;
 import org.junit.jupiter.api.*;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -14,7 +14,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
-class GenreEntityRepositoryImplTest {
+class GenreRepositoryImplTest {
     @Container
     // Инициализируем MySQL контейнер с Testcontainers, используя данные из db.properties
     public static MySQLContainer<?> mysqlContainerDemo = new MySQLContainer<>("mysql:8.0")
@@ -24,7 +24,7 @@ class GenreEntityRepositoryImplTest {
             .withInitScript("SQL/initialization.sql"); // SQL-скрипт для инициализации данных
 
 
-    private GenreEntityRepository genreRepository;
+    private GenreRepository genreRepository;
     private static ConnectionManagerImpl connectionManager;
 
     @BeforeEach
@@ -34,7 +34,7 @@ class GenreEntityRepositoryImplTest {
                 mysqlContainerDemo.getPassword(),
                 mysqlContainerDemo.getDriverClassName());
         try(Connection connection = connectionManager.getConnection()) {
-            genreRepository = new GenreEntityRepositoryImpl(connectionManager);
+            genreRepository = new GenreRepositoryImpl(connectionManager);
         }
     }
 

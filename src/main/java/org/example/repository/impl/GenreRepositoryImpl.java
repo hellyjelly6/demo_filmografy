@@ -4,8 +4,8 @@ import org.example.db.ConnectionManager;
 import org.example.db.ConnectionManagerImpl;
 import org.example.exception.OperationException;
 import org.example.model.GenreEntity;
-import org.example.repository.GenreEntityRepository;
-import org.example.repository.MovieEntityRepository;
+import org.example.repository.GenreRepository;
+import org.example.repository.MovieRepository;
 import org.example.repository.SQLQuery.GenreSQLQuery;
 import org.example.repository.mapper.GenreResultSetMapper;
 import org.example.repository.mapper.impl.GenreResultSetMapperImpl;
@@ -14,21 +14,21 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenreEntityRepositoryImpl implements GenreEntityRepository {
+public class GenreRepositoryImpl implements GenreRepository {
     private final ConnectionManager connectionManager;
     private final GenreResultSetMapper genreResultSetMapper;
-    private final MovieEntityRepository movieEntityRepository;
+    private final MovieRepository movieRepository;
 
-    public GenreEntityRepositoryImpl() {
+    public GenreRepositoryImpl() {
         this.connectionManager = new ConnectionManagerImpl();
         this.genreResultSetMapper = new GenreResultSetMapperImpl();
-        this.movieEntityRepository = new MovieEntityRepositoryImpl(this.connectionManager);
+        this.movieRepository = new MovieRepositoryImpl(this.connectionManager);
     }
 
-    public GenreEntityRepositoryImpl(ConnectionManager connectionManager) {
+    public GenreRepositoryImpl(ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
         this.genreResultSetMapper = new GenreResultSetMapperImpl();
-        this.movieEntityRepository = new MovieEntityRepositoryImpl(this.connectionManager);
+        this.movieRepository = new MovieRepositoryImpl(this.connectionManager);
     }
 
 
@@ -60,7 +60,7 @@ public class GenreEntityRepositoryImpl implements GenreEntityRepository {
         try(Connection connection = connectionManager.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(GenreSQLQuery.DELETE_SQL.getQuery())){
 
-            movieEntityRepository.deleteConstraintByGenreId(id);
+            movieRepository.deleteConstraintByGenreId(id);
 
             preparedStatement.setLong(1, id);
             int affectedRows = preparedStatement.executeUpdate();

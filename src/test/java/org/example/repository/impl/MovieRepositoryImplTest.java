@@ -2,8 +2,8 @@ package org.example.repository.impl;
 
 import org.example.db.ConnectionManagerImpl;
 import org.example.model.MovieEntity;
-import org.example.repository.GenreEntityRepository;
-import org.example.repository.MovieEntityRepository;
+import org.example.repository.GenreRepository;
+import org.example.repository.MovieRepository;
 import org.junit.jupiter.api.*;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -16,7 +16,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
-class MovieEntityRepositoryImplTest {
+class MovieRepositoryImplTest {
 
     @Container
     // Инициализируем MySQL контейнер с Testcontainers, используя данные из db.properties
@@ -26,8 +26,8 @@ class MovieEntityRepositoryImplTest {
             .withPassword("test")// Используем password из db.properties
             .withInitScript("SQL/initialization.sql"); // SQL-скрипт для инициализации данных
 
-    private MovieEntityRepository movieEntityRepository;
-    private GenreEntityRepository genreEntityRepository;
+    private MovieRepository movieRepository;
+    private GenreRepository genreRepository;
     private ConnectionManagerImpl connectionManager;
 
 
@@ -38,8 +38,8 @@ class MovieEntityRepositoryImplTest {
                 mysqlContainerDemo.getPassword(),
                 mysqlContainerDemo.getDriverClassName());
         try(Connection connection = connectionManager.getConnection()) {
-            genreEntityRepository = new GenreEntityRepositoryImpl(connectionManager);
-            movieEntityRepository = new MovieEntityRepositoryImpl(connectionManager);
+            genreRepository = new GenreRepositoryImpl(connectionManager);
+            movieRepository = new MovieRepositoryImpl(connectionManager);
         }
     }
 
@@ -52,7 +52,7 @@ class MovieEntityRepositoryImplTest {
 
     @Test
     void findById() {
-        MovieEntity movie = movieEntityRepository.findById(1L);
+        MovieEntity movie = movieRepository.findById(1L);
 
         assertNotNull(movie);
         assertEquals(1L, movie.getId());
@@ -63,16 +63,16 @@ class MovieEntityRepositoryImplTest {
 
     @Test
     void deleteById() {
-        boolean deleted = movieEntityRepository.deleteById(1L);
+        boolean deleted = movieRepository.deleteById(1L);
         assertTrue(deleted);
 
-        MovieEntity movie = movieEntityRepository.findById(1L);
+        MovieEntity movie = movieRepository.findById(1L);
         assertNull(movie);
     }
 
     @Test
     void findAll() {
-        List<MovieEntity> movieEntities = movieEntityRepository.findAll();
+        List<MovieEntity> movieEntities = movieRepository.findAll();
 
         assertFalse(movieEntities.isEmpty());
         assertEquals(5, movieEntities.size());
@@ -80,8 +80,8 @@ class MovieEntityRepositoryImplTest {
 
     @Test
     void save() {
-        MovieEntity movieEntity = new MovieEntity(null, "новый фильм", 1999, genreEntityRepository.findById(3L), null);
-        MovieEntity savedMovieEntity = movieEntityRepository.save(movieEntity);
+        MovieEntity movieEntity = new MovieEntity(null, "новый фильм", 1999, genreRepository.findById(3L), null);
+        MovieEntity savedMovieEntity = movieRepository.save(movieEntity);
 
         assertNotNull(savedMovieEntity.getId());
         assertEquals(movieEntity.getTitle(), savedMovieEntity.getTitle());
@@ -91,42 +91,42 @@ class MovieEntityRepositoryImplTest {
 
     @Test
     void update() {
-        MovieEntity movie = movieEntityRepository.findById(2L);
+        MovieEntity movie = movieRepository.findById(2L);
         assertNotNull(movie);
 
         movie.setTitle("Достать ножи");
         movie.setReleaseYear(2001);
-        movie.setGenre(genreEntityRepository.findById(2L));
+        movie.setGenre(genreRepository.findById(2L));
 
-        MovieEntity updated = movieEntityRepository.update(movie);
+        MovieEntity updated = movieRepository.update(movie);
 
         assertEquals("Достать ножи", updated.getTitle());
         assertEquals(2001, updated.getReleaseYear());
-        assertEquals(genreEntityRepository.findById(2L), updated.getGenre());
+        assertEquals(genreRepository.findById(2L), updated.getGenre());
     }
 
     @Test
     void exists() {
-        boolean exists = movieEntityRepository.exists(2L);
+        boolean exists = movieRepository.exists(2L);
         assertTrue(exists);
 
-        exists = movieEntityRepository.exists(333L);
+        exists = movieRepository.exists(333L);
         assertFalse(exists);
     }
 
     @Test
     void findMoviesByGenreId() {
-        List<MovieEntity> movieEntities = movieEntityRepository.findMoviesByGenreId(3L);
+        List<MovieEntity> movieEntities = movieRepository.findMoviesByGenreId(3L);
         assertFalse(movieEntities.isEmpty());
         assertEquals(1, movieEntities.size());
     }
 
     @Test
     void deleteConstraintByGenreId() {
-        boolean deleted = movieEntityRepository.deleteConstraintByGenreId(3L);
+        boolean deleted = movieRepository.deleteConstraintByGenreId(3L);
         assertTrue(deleted);
 
-        List<MovieEntity> movieEntities = movieEntityRepository.findMoviesByGenreId(3L);
+        List<MovieEntity> movieEntities = movieRepository.findMoviesByGenreId(3L);
         assertTrue(movieEntities.isEmpty());
     }
 }

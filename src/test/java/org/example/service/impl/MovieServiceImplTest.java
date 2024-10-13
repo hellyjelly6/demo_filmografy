@@ -4,8 +4,8 @@ import org.example.exception.NotFoundException;
 import org.example.model.ActorEntity;
 import org.example.model.GenreEntity;
 import org.example.model.MovieEntity;
-import org.example.repository.ActorToMovieEntityRepository;
-import org.example.repository.MovieEntityRepository;
+import org.example.repository.ActorToMovieRepository;
+import org.example.repository.MovieRepository;
 import org.example.servlet.dto.ActorLimitedDto;
 import org.example.servlet.dto.MovieIncomingDto;
 import org.example.servlet.dto.MovieOutGoingDto;
@@ -23,8 +23,8 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
 class MovieServiceImplTest {
-    private MovieEntityRepository mockmovieEntityRepository;
-    private ActorToMovieEntityRepository mockactorToMovieEntityRepository;
+    private MovieRepository mockmovieRepository;
+    private ActorToMovieRepository mockactorToMovieRepository;
     private ActorDtoMapper mockactorDtoMapper;
     private MovieDtoMapper mockmovieDtoMapper;
     private MovieServiceImpl movieService;
@@ -35,11 +35,12 @@ class MovieServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        mockmovieEntityRepository = Mockito.mock(MovieEntityRepository.class);
-        mockactorToMovieEntityRepository = Mockito.mock(ActorToMovieEntityRepository.class);
+        mockmovieRepository = Mockito.mock(MovieRepository.class);
+        mockactorToMovieRepository = Mockito.mock(ActorToMovieRepository.class);
         mockactorDtoMapper = Mockito.mock(ActorDtoMapper.class);
         mockmovieDtoMapper = Mockito.mock(MovieDtoMapper.class);
-        movieService = new MovieServiceImpl(mockmovieEntityRepository, mockactorDtoMapper, mockmovieDtoMapper, mockactorToMovieEntityRepository);
+        movieService = new MovieServiceImpl(mockmovieRepository, mockactorDtoMapper, mockmovieDtoMapper,
+            mockactorToMovieRepository);
 
         movieIncomingDto = new MovieIncomingDto("Титаник", 1997, new GenreEntity());
         movieEntity = new MovieEntity(1L, "Титаник", 1997, new GenreEntity(), List.of());
@@ -56,7 +57,7 @@ class MovieServiceImplTest {
                 new MovieOutGoingDto(2L, "Интерстеллар", 2014, new GenreEntity(), List.of())
         );
 
-        when(mockmovieEntityRepository.findAll()).thenReturn(List.of(movieEntity, movieEntity2));
+        when(mockmovieRepository.findAll()).thenReturn(List.of(movieEntity, movieEntity2));
         when(mockmovieDtoMapper.map(anyList())).thenReturn(mockMovieList);
 
         List<MovieOutGoingDto> result = movieService.findAll();
@@ -73,14 +74,14 @@ class MovieServiceImplTest {
         assertEquals(mockMovieList.get(0).getActors(), result.get(0).getActors());
         assertEquals(mockMovieList.get(1).getActors(), result.get(1).getActors());
 
-        verify(mockmovieEntityRepository).findAll();
+        verify(mockmovieRepository).findAll();
         verify(mockmovieDtoMapper).map(anyList());
     }
 
     @Test
     void findById() throws NotFoundException {
-        when(mockmovieEntityRepository.exists(1L)).thenReturn(true);
-        when(mockmovieEntityRepository.findById(1L)).thenReturn(movieEntity);
+        when(mockmovieRepository.exists(1L)).thenReturn(true);
+        when(mockmovieRepository.findById(1L)).thenReturn(movieEntity);
         when(mockmovieDtoMapper.map(movieEntity)).thenReturn(movieOutGoingDto);
 
         MovieOutGoingDto result = movieService.findById(1L);
@@ -92,25 +93,25 @@ class MovieServiceImplTest {
         assertEquals(movieOutGoingDto.getGenre(), result.getGenre());
         assertEquals(movieOutGoingDto.getActors(), result.getActors());
 
-        verify(mockmovieEntityRepository).exists(1L);
-        verify(mockmovieEntityRepository).findById(1L);
+        verify(mockmovieRepository).exists(1L);
+        verify(mockmovieRepository).findById(1L);
         verify(mockmovieDtoMapper).map(movieEntity);
     }
 
     @Test
     void findByIdNotFound()  {
-        when(mockmovieEntityRepository.exists(1L)).thenReturn(false);
+        when(mockmovieRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> movieService.findById(1L));
 
-        verify(mockmovieEntityRepository).exists(1L);
-        verify(mockmovieEntityRepository, never()).findById(anyLong());
+        verify(mockmovieRepository).exists(1L);
+        verify(mockmovieRepository, never()).findById(anyLong());
     }
 
     @Test
     void save() {
         when(mockmovieDtoMapper.map(movieIncomingDto)).thenReturn(movieEntity);
-        when(mockmovieEntityRepository.save(movieEntity)).thenReturn(movieEntity);
+        when(mockmovieRepository.save(movieEntity)).thenReturn(movieEntity);
         when(mockmovieDtoMapper.map(movieEntity)).thenReturn(movieOutGoingDto);
 
         MovieOutGoingDto result = movieService.save(movieIncomingDto);
@@ -124,7 +125,7 @@ class MovieServiceImplTest {
         assertEquals(movieOutGoingDto.getActors(), result.getActors());
 
         verify(mockmovieDtoMapper).map(movieIncomingDto);
-        verify(mockmovieEntityRepository).save(movieEntity);
+        verify(mockmovieRepository).save(movieEntity);
         verify(mockmovieDtoMapper).map(movieEntity);
     }
 
@@ -142,8 +143,8 @@ class MovieServiceImplTest {
                 new ActorEntity(2L, "Кит", "Харингтон", java.sql.Date.valueOf("1986-12-26"), List.of())
         );
 
-        when(mockmovieEntityRepository.exists(movieId)).thenReturn(true);
-        when(mockmovieEntityRepository.findById(movieId)).thenReturn(movieEntity);
+        when(mockmovieRepository.exists(movieId)).thenReturn(true);
+        when(mockmovieRepository.findById(movieId)).thenReturn(movieEntity);
         when(mockactorDtoMapper.map(actorDtoArray)).thenReturn(actorEntityList);
         when(movieService.findById(movieId)).thenReturn(movieOutGoingDto);
 
@@ -155,18 +156,18 @@ class MovieServiceImplTest {
         verify(mockactorDtoMapper).map(actorDtoArray);
 
         for (ActorEntity actorEntity : actorEntityList) {
-            verify(mockactorToMovieEntityRepository).saveActorsToMovieByUserName(movieId, actorEntity);
+            verify(mockactorToMovieRepository).saveActorsToMovieByUserName(movieId, actorEntity);
         }
 
         // Проверяем, что метод findById был вызван дважды: один раз в методе и один раз в тесте
-        verify(mockmovieEntityRepository, times(2)).findById(movieId);
+        verify(mockmovieRepository, times(2)).findById(movieId);
     }
 
     @Test
     void update() throws NotFoundException {
-        when(mockmovieEntityRepository.exists(1L)).thenReturn(true);
+        when(mockmovieRepository.exists(1L)).thenReturn(true);
         when(mockmovieDtoMapper.map(movieIncomingDto)).thenReturn(movieEntity);
-        when(mockmovieEntityRepository.update(movieEntity)).thenReturn(movieEntity);
+        when(mockmovieRepository.update(movieEntity)).thenReturn(movieEntity);
         when(mockmovieDtoMapper.map(movieEntity)).thenReturn(movieOutGoingDto);
 
         MovieOutGoingDto result = movieService.update(movieIncomingDto, 1L);
@@ -174,42 +175,42 @@ class MovieServiceImplTest {
         assertNotNull(result);
         assertEquals(movieOutGoingDto, result);
 
-        verify(mockmovieEntityRepository).exists(1L);
+        verify(mockmovieRepository).exists(1L);
         verify(mockmovieDtoMapper).map(movieIncomingDto);
-        verify(mockmovieEntityRepository).update(movieEntity);
+        verify(mockmovieRepository).update(movieEntity);
         verify(mockmovieDtoMapper).map(movieEntity);
     }
 
     @Test
     void updateNotFound() {
-        when(mockmovieEntityRepository.exists(1L)).thenReturn(false);
+        when(mockmovieRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> movieService.update(movieIncomingDto, 1L));
 
-        verify(mockmovieEntityRepository).exists(1L);
-        verify(mockmovieEntityRepository, never()).update(any(MovieEntity.class));
+        verify(mockmovieRepository).exists(1L);
+        verify(mockmovieRepository, never()).update(any(MovieEntity.class));
     }
 
     @Test
     void delete() throws NotFoundException {
-        when(mockmovieEntityRepository.exists(1L)).thenReturn(true);
-        when(mockmovieEntityRepository.deleteById(1L)).thenReturn(true);
+        when(mockmovieRepository.exists(1L)).thenReturn(true);
+        when(mockmovieRepository.deleteById(1L)).thenReturn(true);
 
         boolean result = movieService.delete(1L);
 
         assertTrue(result);
 
-        verify(mockmovieEntityRepository).exists(1L);
-        verify(mockmovieEntityRepository).deleteById(1L);
+        verify(mockmovieRepository).exists(1L);
+        verify(mockmovieRepository).deleteById(1L);
     }
 
     @Test
     void deleteNotFound() {
-        when(mockmovieEntityRepository.exists(1L)).thenReturn(false);
+        when(mockmovieRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> movieService.delete(1L));
 
-        verify(mockmovieEntityRepository).exists(1L);
-        verify(mockmovieEntityRepository, never()).deleteById(anyLong());
+        verify(mockmovieRepository).exists(1L);
+        verify(mockmovieRepository, never()).deleteById(anyLong());
     }
 }

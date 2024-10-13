@@ -4,8 +4,8 @@ import org.example.db.ConnectionManager;
 import org.example.db.ConnectionManagerImpl;
 import org.example.exception.OperationException;
 import org.example.model.MovieEntity;
-import org.example.repository.ActorToMovieEntityRepository;
-import org.example.repository.MovieEntityRepository;
+import org.example.repository.ActorToMovieRepository;
+import org.example.repository.MovieRepository;
 import org.example.repository.SQLQuery.MovieSQLQuery;
 import org.example.repository.mapper.MovieResultSetMapper;
 import org.example.repository.mapper.impl.MovieResultSetMapperImpl;
@@ -14,21 +14,21 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieEntityRepositoryImpl implements MovieEntityRepository {
+public class MovieRepositoryImpl implements MovieRepository {
     private final ConnectionManager connectionManager;
     private final MovieResultSetMapper resultSetMapper;
-    private final ActorToMovieEntityRepository actorToMovieEntityRepository;
+    private final ActorToMovieRepository actorToMovieRepository;
 
-    public MovieEntityRepositoryImpl(ConnectionManager connectionManager) {
+    public MovieRepositoryImpl(ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
         this.resultSetMapper = new MovieResultSetMapperImpl();
-        this.actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl(this.connectionManager);
+        this.actorToMovieRepository = new ActorToMovieRepositoryImpl(this.connectionManager);
     }
 
-    public MovieEntityRepositoryImpl() {
+    public MovieRepositoryImpl() {
         this.connectionManager = new ConnectionManagerImpl();
         this.resultSetMapper = new MovieResultSetMapperImpl();
-        this.actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl(this.connectionManager);
+        this.actorToMovieRepository = new ActorToMovieRepositoryImpl(this.connectionManager);
     }
 
     public ConnectionManager getConnectionManager() {
@@ -58,7 +58,7 @@ public class MovieEntityRepositoryImpl implements MovieEntityRepository {
         try(Connection connection = connectionManager.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(MovieSQLQuery.DELETE_SQL.getQuery())){
 
-            actorToMovieEntityRepository.deleteByMovieId(id);
+            actorToMovieRepository.deleteByMovieId(id);
 
             preparedStatement.setLong(1, id);
             isDelete = preparedStatement.executeUpdate() > 0;

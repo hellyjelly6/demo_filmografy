@@ -4,8 +4,8 @@ import org.example.db.ConnectionManager;
 import org.example.db.ConnectionManagerImpl;
 import org.example.exception.OperationException;
 import org.example.model.ActorEntity;
-import org.example.repository.ActorEntityRepository;
-import org.example.repository.ActorToMovieEntityRepository;
+import org.example.repository.ActorRepository;
+import org.example.repository.ActorToMovieRepository;
 import org.example.repository.SQLQuery.ActorSQLQuery;
 import org.example.repository.mapper.ActorResultSetMapper;
 import org.example.repository.mapper.impl.ActorResultSetMapperImpl;
@@ -14,21 +14,21 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActorEntityRepositoryImpl implements ActorEntityRepository {
+public class ActorRepositoryImpl implements ActorRepository {
     private final ConnectionManager connectionManager;
     private final ActorResultSetMapper actorResultSetMapper;
-    private final ActorToMovieEntityRepository actorToMovieEntityRepository;
+    private final ActorToMovieRepository actorToMovieRepository;
 
-    public ActorEntityRepositoryImpl(ConnectionManagerImpl connectionManager) {
+    public ActorRepositoryImpl(ConnectionManagerImpl connectionManager) {
         this.connectionManager = connectionManager;
         this.actorResultSetMapper = new ActorResultSetMapperImpl();
-        this.actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl(this.connectionManager);
+        this.actorToMovieRepository = new ActorToMovieRepositoryImpl(this.connectionManager);
     }
 
-    public ActorEntityRepositoryImpl() {
+    public ActorRepositoryImpl() {
         this.connectionManager = new ConnectionManagerImpl();
         this.actorResultSetMapper = new ActorResultSetMapperImpl();
-        this.actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl(this.connectionManager);
+        this.actorToMovieRepository = new ActorToMovieRepositoryImpl(this.connectionManager);
     }
 
     public ConnectionManager getConnectionManager() {
@@ -60,7 +60,7 @@ public class ActorEntityRepositoryImpl implements ActorEntityRepository {
         try(Connection connection = connectionManager.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(ActorSQLQuery.DELETE_SQL.getQuery())) {
 
-            actorToMovieEntityRepository.deleteByActorId(id);
+            actorToMovieRepository.deleteByActorId(id);
 
             preparedStatement.setLong(1, id);
             int affectedRows = preparedStatement.executeUpdate();

@@ -5,7 +5,7 @@ import org.example.db.ConnectionManagerImpl;
 import org.example.exception.OperationException;
 import org.example.model.ActorEntity;
 import org.example.model.MovieEntity;
-import org.example.repository.ActorToMovieEntityRepository;
+import org.example.repository.ActorToMovieRepository;
 import org.example.repository.SQLQuery.ActorSQLQuery;
 import org.example.repository.SQLQuery.ActorToMovieSQLQuery;
 import org.example.repository.mapper.ActorResultSetMapper;
@@ -20,18 +20,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActorToMovieEntityRepositoryImpl implements ActorToMovieEntityRepository {
+public class ActorToMovieRepositoryImpl implements ActorToMovieRepository {
     private final ConnectionManager connectionManager;
     private final MovieResultSetMapper movieResultSetMapper;
     private final ActorResultSetMapper actorResultSetMapper;
 
-    public ActorToMovieEntityRepositoryImpl(ConnectionManager connectionManager) {
+    public ActorToMovieRepositoryImpl(ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
         this.movieResultSetMapper = new MovieResultSetMapperImpl();
         this.actorResultSetMapper = new ActorResultSetMapperImpl();
     }
 
-    public ActorToMovieEntityRepositoryImpl() {
+    public ActorToMovieRepositoryImpl() {
         this.connectionManager = new ConnectionManagerImpl();
         this.movieResultSetMapper = new MovieResultSetMapperImpl();
         this.actorResultSetMapper = new ActorResultSetMapperImpl();

@@ -2,7 +2,7 @@ package org.example.repository.impl;
 
 import org.example.db.ConnectionManagerImpl;
 import org.example.model.ActorEntity;
-import org.example.repository.ActorEntityRepository;
+import org.example.repository.ActorRepository;
 import org.junit.jupiter.api.*;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @Testcontainers
-class ActorEntityRepositoryImplTest {
+class ActorRepositoryImplTest {
     @Container
     public static MySQLContainer<?> mysqlContainerDemo = new MySQLContainer<>("mysql:8.0")
             .withDatabaseName("filmografy")
@@ -24,7 +24,7 @@ class ActorEntityRepositoryImplTest {
             .withPassword("test") // Используем password из db.properties
             .withInitScript("SQL/initialization.sql"); // SQL-скрипт для инициализации данных
 
-    private ActorEntityRepository actorEntityRepository;
+    private ActorRepository actorRepository;
     private ConnectionManagerImpl connectionManager;
 
     @BeforeEach
@@ -34,7 +34,7 @@ class ActorEntityRepositoryImplTest {
                 mysqlContainerDemo.getPassword(),
                 mysqlContainerDemo.getDriverClassName());
         try(Connection connection = connectionManager.getConnection()) {
-            actorEntityRepository = new ActorEntityRepositoryImpl(connectionManager);
+            actorRepository = new ActorRepositoryImpl(connectionManager);
         }
     }
 
@@ -47,7 +47,7 @@ class ActorEntityRepositoryImplTest {
 
     @Test
     void findById() {
-        ActorEntity actorEntity = actorEntityRepository.findById(1L);
+        ActorEntity actorEntity = actorRepository.findById(1L);
         assertNotNull(actorEntity);
         assertEquals(1L, actorEntity.getId());
         assertEquals("Киану", actorEntity.getFirstName());
@@ -57,16 +57,16 @@ class ActorEntityRepositoryImplTest {
 
     @Test
     void deleteById() {
-        boolean deleted = actorEntityRepository.deleteById(1L);
+        boolean deleted = actorRepository.deleteById(1L);
         assertTrue(deleted);
 
-        ActorEntity actorEntity = actorEntityRepository.findById(1L);
+        ActorEntity actorEntity = actorRepository.findById(1L);
         assertNull(actorEntity);
     }
 
     @Test
     void findAll() {
-        List<ActorEntity> actorEntities = actorEntityRepository.findAll();
+        List<ActorEntity> actorEntities = actorRepository.findAll();
         assertFalse(actorEntities.isEmpty());
         assertEquals(7, actorEntities.size());
     }
@@ -74,7 +74,7 @@ class ActorEntityRepositoryImplTest {
     @Test
     void save() {
         ActorEntity actorEntity = new ActorEntity(null, "New", "Actor", java.sql.Date.valueOf("1965-09-12"), null);
-        ActorEntity savedActorEntity = actorEntityRepository.save(actorEntity);
+        ActorEntity savedActorEntity = actorRepository.save(actorEntity);
 
         assertNotNull(savedActorEntity.getId());
         assertEquals("New", savedActorEntity.getFirstName());
@@ -84,14 +84,14 @@ class ActorEntityRepositoryImplTest {
 
     @Test
     void update() {
-        ActorEntity actorEntity = actorEntityRepository.findById(2L);
+        ActorEntity actorEntity = actorRepository.findById(2L);
         assertNotNull(actorEntity);
 
         actorEntity.setFirstName("Эмилия");
         actorEntity.setLastName("Кларк");
         actorEntity.setBirthDate(java.sql.Date.valueOf("1999-09-12"));
 
-        actorEntityRepository.update(actorEntity);
+        actorRepository.update(actorEntity);
 
         assertEquals("Эмилия", actorEntity.getFirstName());
         assertEquals("Кларк", actorEntity.getLastName());
@@ -100,10 +100,10 @@ class ActorEntityRepositoryImplTest {
 
     @Test
     void exists() {
-        boolean exists = actorEntityRepository.exists(2L);
+        boolean exists = actorRepository.exists(2L);
         assertTrue(exists);
 
-        exists = actorEntityRepository.exists(666L);
+        exists = actorRepository.exists(666L);
         assertFalse(exists);
     }
 }

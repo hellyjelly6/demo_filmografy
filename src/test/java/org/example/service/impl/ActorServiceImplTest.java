@@ -2,8 +2,8 @@ package org.example.service.impl;
 
 import org.example.exception.NotFoundException;
 import org.example.model.ActorEntity;
-import org.example.repository.ActorEntityRepository;
-import org.example.repository.ActorToMovieEntityRepository;
+import org.example.repository.ActorRepository;
+import org.example.repository.ActorToMovieRepository;
 import org.example.servlet.dto.ActorIncomingDto;
 import org.example.servlet.dto.ActorOutGoingDto;
 import org.example.servlet.mapper.ActorDtoMapper;
@@ -18,8 +18,8 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
 class ActorServiceImplTest {
-    private ActorEntityRepository mockActorEntityRepository;
-    private ActorToMovieEntityRepository mockActorToMovieEntityRepository;
+    private ActorRepository mockActorRepository;
+    private ActorToMovieRepository mockActorToMovieRepository;
     private ActorDtoMapper mockActorDtoMapper;
     private ActorServiceImpl actorService;
 
@@ -29,10 +29,10 @@ class ActorServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        mockActorEntityRepository = Mockito.mock(ActorEntityRepository.class);
-        mockActorToMovieEntityRepository = Mockito.mock(ActorToMovieEntityRepository.class);
+        mockActorRepository = Mockito.mock(ActorRepository.class);
+        mockActorToMovieRepository = Mockito.mock(ActorToMovieRepository.class);
         mockActorDtoMapper = Mockito.mock(ActorDtoMapper.class);
-        actorService = new ActorServiceImpl(mockActorEntityRepository, mockActorToMovieEntityRepository, mockActorDtoMapper);
+        actorService = new ActorServiceImpl(mockActorRepository, mockActorToMovieRepository, mockActorDtoMapper);
 
         actorIncomingDto = new ActorIncomingDto("Эмилия", "Кларк", java.sql.Date.valueOf("1986-10-23") );
         actorEntity = new ActorEntity(1L, "Эмилия", "Кларк", java.sql.Date.valueOf("1986-10-23"), List.of());
@@ -46,7 +46,7 @@ class ActorServiceImplTest {
                 actorOutGoingDto,
                 new ActorOutGoingDto(2L, "Алфи", "Аллен", java.sql.Date.valueOf("1986-09-12"), List.of()));
 
-        when(mockActorEntityRepository.findAll()).thenReturn(List.of(actorEntity, actorEntity2));
+        when(mockActorRepository.findAll()).thenReturn(List.of(actorEntity, actorEntity2));
         when(mockActorDtoMapper.mapList(anyList())).thenReturn(actorOutGoingDtoList);
 
         List<ActorOutGoingDto> result = actorService.findAll();
@@ -62,14 +62,14 @@ class ActorServiceImplTest {
         assertEquals("Аллен", result.get(1).getLastName());
         assertEquals(java.sql.Date.valueOf("1986-09-12").toLocalDate(), result.get(1).getBirthDate().toLocalDate());
 
-        verify(mockActorEntityRepository).findAll();
+        verify(mockActorRepository).findAll();
         verify(mockActorDtoMapper).mapList(anyList());
     }
 
     @Test
     void findById() throws NotFoundException {
-        when(mockActorEntityRepository.exists(1L)).thenReturn(true);
-        when(mockActorEntityRepository.findById(1L)).thenReturn(actorEntity);
+        when(mockActorRepository.exists(1L)).thenReturn(true);
+        when(mockActorRepository.findById(1L)).thenReturn(actorEntity);
         when(mockActorDtoMapper.map(actorEntity)).thenReturn(actorOutGoingDto);
 
         ActorOutGoingDto result = actorService.findById(1L);
@@ -80,25 +80,25 @@ class ActorServiceImplTest {
         assertEquals("Кларк", result.getLastName());
         assertEquals(java.sql.Date.valueOf("1986-10-23").toLocalDate(), result.getBirthDate().toLocalDate());
 
-        verify(mockActorEntityRepository).exists(1L);
-        verify(mockActorEntityRepository).findById(1L);
+        verify(mockActorRepository).exists(1L);
+        verify(mockActorRepository).findById(1L);
         verify(mockActorDtoMapper).map(actorEntity);
     }
 
     @Test
     void findByIdNotFound()  {
-        when(mockActorEntityRepository.exists(1L)).thenReturn(false);
+        when(mockActorRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> actorService.findById(1L));
 
-        verify(mockActorEntityRepository).exists(1L);
-        verify(mockActorEntityRepository, never()).findById(anyLong());
+        verify(mockActorRepository).exists(1L);
+        verify(mockActorRepository, never()).findById(anyLong());
     }
 
     @Test
     void save() {
         when(mockActorDtoMapper.map(actorIncomingDto)).thenReturn(actorEntity);
-        when(mockActorEntityRepository.save(actorEntity)).thenReturn(actorEntity);
+        when(mockActorRepository.save(actorEntity)).thenReturn(actorEntity);
         when(mockActorDtoMapper.map(actorEntity)).thenReturn(actorOutGoingDto);
 
         ActorOutGoingDto result = actorService.save(actorIncomingDto);
@@ -110,15 +110,15 @@ class ActorServiceImplTest {
         assertEquals(java.sql.Date.valueOf("1986-10-23").toLocalDate(), result.getBirthDate().toLocalDate());
 
         verify(mockActorDtoMapper).map(actorIncomingDto);
-        verify(mockActorEntityRepository).save(actorEntity);
+        verify(mockActorRepository).save(actorEntity);
         verify(mockActorDtoMapper).map(actorEntity);
     }
 
     @Test
     void update() throws NotFoundException {
-        when(mockActorEntityRepository.exists(1L)).thenReturn(true);
+        when(mockActorRepository.exists(1L)).thenReturn(true);
         when(mockActorDtoMapper.map(actorIncomingDto)).thenReturn(actorEntity);
-        when(mockActorEntityRepository.update(actorEntity)).thenReturn(actorEntity);
+        when(mockActorRepository.update(actorEntity)).thenReturn(actorEntity);
         when(mockActorDtoMapper.map(actorEntity)).thenReturn(actorOutGoingDto);
 
         ActorOutGoingDto result = actorService.update(actorIncomingDto, 1L);
@@ -129,42 +129,42 @@ class ActorServiceImplTest {
         assertEquals("Кларк", result.getLastName());
         assertEquals(java.sql.Date.valueOf("1986-10-23").toLocalDate(), result.getBirthDate().toLocalDate());
 
-        verify(mockActorEntityRepository).exists(1L);
+        verify(mockActorRepository).exists(1L);
         verify(mockActorDtoMapper).map(actorIncomingDto);
-        verify(mockActorEntityRepository).update(actorEntity);
+        verify(mockActorRepository).update(actorEntity);
         verify(mockActorDtoMapper).map(actorEntity);
     }
 
     @Test
     void updateNotFound()  {
-        when(mockActorEntityRepository.exists(1L)).thenReturn(false);
+        when(mockActorRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> actorService.update(actorIncomingDto, 1L));
 
-        verify(mockActorEntityRepository).exists(1L);
-        verify(mockActorEntityRepository, never()).findById(anyLong());
+        verify(mockActorRepository).exists(1L);
+        verify(mockActorRepository, never()).findById(anyLong());
     }
 
     @Test
     void delete() throws NotFoundException {
-        when(mockActorEntityRepository.exists(1L)).thenReturn(true);
-        when(mockActorEntityRepository.deleteById(1L)).thenReturn(true);
+        when(mockActorRepository.exists(1L)).thenReturn(true);
+        when(mockActorRepository.deleteById(1L)).thenReturn(true);
 
         boolean result = actorService.delete(1L);
 
         assertTrue(result);
 
-        verify(mockActorEntityRepository).exists(1L);
-        verify(mockActorEntityRepository).deleteById(1L);
+        verify(mockActorRepository).exists(1L);
+        verify(mockActorRepository).deleteById(1L);
     }
 
     @Test
     void deleteNotFound()  {
-        when(mockActorEntityRepository.exists(1L)).thenReturn(false);
+        when(mockActorRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> actorService.delete(1L));
 
-        verify(mockActorEntityRepository).exists(1L);
-        verify(mockActorEntityRepository, never()).findById(anyLong());
+        verify(mockActorRepository).exists(1L);
+        verify(mockActorRepository, never()).findById(anyLong());
     }
 }

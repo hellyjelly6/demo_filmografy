@@ -2,8 +2,8 @@ package org.example.service.impl;
 
 import org.example.exception.NotFoundException;
 import org.example.model.GenreEntity;
-import org.example.repository.GenreEntityRepository;
-import org.example.repository.MovieEntityRepository;
+import org.example.repository.GenreRepository;
+import org.example.repository.MovieRepository;
 import org.example.servlet.dto.GenreIncomingDto;
 import org.example.servlet.dto.GenreOutGoingDto;
 import org.example.servlet.mapper.GenreDtoMapper;
@@ -18,9 +18,9 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
 class GenreServiceImplTest {
-    private GenreEntityRepository mockGenreEntityRepository;
+    private GenreRepository mockGenreRepository;
     private GenreDtoMapper mockDtoMapper;
-    private MovieEntityRepository mockMovieEntityRepository;
+    private MovieRepository mockMovieRepository;
     private GenreServiceImpl genreService;
 
     private GenreEntity genreEntity;
@@ -29,10 +29,10 @@ class GenreServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        mockGenreEntityRepository = Mockito.mock(GenreEntityRepository.class);
+        mockGenreRepository = Mockito.mock(GenreRepository.class);
         mockDtoMapper = Mockito.mock(GenreDtoMapper.class);
-        mockMovieEntityRepository = Mockito.mock(MovieEntityRepository.class);
-        genreService = new GenreServiceImpl(mockGenreEntityRepository, mockDtoMapper, mockMovieEntityRepository);
+        mockMovieRepository = Mockito.mock(MovieRepository.class);
+        genreService = new GenreServiceImpl(mockGenreRepository, mockDtoMapper, mockMovieRepository);
 
         genreIncomingDto = new GenreIncomingDto("genre1");
         genreEntity = new GenreEntity(1L, "genre1", List.of());
@@ -50,7 +50,7 @@ class GenreServiceImplTest {
         );
 
         // Настройка моков
-        when(mockGenreEntityRepository.findAll()).thenReturn(List.of(genreEntity, genreEntity2));
+        when(mockGenreRepository.findAll()).thenReturn(List.of(genreEntity, genreEntity2));
         when(mockDtoMapper.map(anyList())).thenReturn(genreOutGoingDtoList);
 
         // Вызов метода сервиса
@@ -63,15 +63,15 @@ class GenreServiceImplTest {
         assertEquals(genreOutGoingDtoList.get(1).getName(), result.get(1).getName());
 
         // Верификация вызовов моков
-        verify(mockGenreEntityRepository).findAll();
+        verify(mockGenreRepository).findAll();
         verify(mockDtoMapper).map(anyList());
     }
 
     @Test
     void findById() throws NotFoundException {
 
-        when(mockGenreEntityRepository.exists(1L)).thenReturn(true);
-        when(mockGenreEntityRepository.findById(1L)).thenReturn(genreEntity);
+        when(mockGenreRepository.exists(1L)).thenReturn(true);
+        when(mockGenreRepository.findById(1L)).thenReturn(genreEntity);
         when(mockDtoMapper.map(genreEntity)).thenReturn(genreOutGoingDto);
 
         GenreOutGoingDto result = genreService.findById(1L);
@@ -80,25 +80,25 @@ class GenreServiceImplTest {
         assertEquals(1L, result.getId());
         assertEquals("genre1", result.getName());
 
-        verify(mockGenreEntityRepository).exists(1L);
-        verify(mockGenreEntityRepository).findById(1L);
+        verify(mockGenreRepository).exists(1L);
+        verify(mockGenreRepository).findById(1L);
         verify(mockDtoMapper).map(genreEntity);
     }
 
     @Test
     void findByIdNotFound()  {
-        when(mockGenreEntityRepository.exists(1L)).thenReturn(false);
+        when(mockGenreRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> genreService.findById(1L));
 
-        verify(mockGenreEntityRepository).exists(1L);
-        verify(mockGenreEntityRepository, never()).findById(anyLong());
+        verify(mockGenreRepository).exists(1L);
+        verify(mockGenreRepository, never()).findById(anyLong());
     }
 
     @Test
     void save() {
         when(mockDtoMapper.map(genreIncomingDto)).thenReturn(genreEntity);
-        when(mockGenreEntityRepository.save(genreEntity)).thenReturn(genreEntity);
+        when(mockGenreRepository.save(genreEntity)).thenReturn(genreEntity);
         when(mockDtoMapper.map(genreEntity)).thenReturn(genreOutGoingDto);
 
         GenreOutGoingDto result = genreService.save(genreIncomingDto);
@@ -108,15 +108,15 @@ class GenreServiceImplTest {
         assertEquals("genre1", result.getName());
 
         verify(mockDtoMapper).map(genreIncomingDto);
-        verify(mockGenreEntityRepository).save(genreEntity);
+        verify(mockGenreRepository).save(genreEntity);
         verify(mockDtoMapper).map(genreEntity);
     }
 
     @Test
     void update() throws NotFoundException {
-        when(mockGenreEntityRepository.exists(1L)).thenReturn(true);
+        when(mockGenreRepository.exists(1L)).thenReturn(true);
         when(mockDtoMapper.map(genreIncomingDto)).thenReturn(genreEntity);
-        when(mockGenreEntityRepository.update(genreEntity)).thenReturn(genreEntity);
+        when(mockGenreRepository.update(genreEntity)).thenReturn(genreEntity);
         when(mockDtoMapper.map(genreEntity)).thenReturn(genreOutGoingDto);
 
         GenreOutGoingDto result = genreService.update(genreIncomingDto, 1L);
@@ -125,44 +125,44 @@ class GenreServiceImplTest {
         assertEquals(1L, result.getId());
         assertEquals("genre1", result.getName());
 
-        verify(mockGenreEntityRepository).exists(1L);
+        verify(mockGenreRepository).exists(1L);
         verify(mockDtoMapper).map(genreIncomingDto);
-        verify(mockGenreEntityRepository).update(genreEntity);
+        verify(mockGenreRepository).update(genreEntity);
         verify(mockDtoMapper).map(genreEntity);
     }
 
     @Test
     void updateNotFound()  {
-        when(mockGenreEntityRepository.exists(1L)).thenReturn(false);
+        when(mockGenreRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> genreService.update(genreIncomingDto, 1L));
 
-        verify(mockGenreEntityRepository).exists(1L);
-        verify(mockGenreEntityRepository, never()).update(any(GenreEntity.class));
+        verify(mockGenreRepository).exists(1L);
+        verify(mockGenreRepository, never()).update(any(GenreEntity.class));
 
     }
 
     @Test
     void delete() throws NotFoundException {
-        when(mockGenreEntityRepository.exists(1L)).thenReturn(true);
-        when(mockGenreEntityRepository.deleteById(1L)).thenReturn(true);
+        when(mockGenreRepository.exists(1L)).thenReturn(true);
+        when(mockGenreRepository.deleteById(1L)).thenReturn(true);
 
         boolean result = genreService.delete(1L);
 
         assertTrue(result);
 
-        verify(mockGenreEntityRepository).exists(1L);
-        verify(mockGenreEntityRepository).deleteById(1L);
+        verify(mockGenreRepository).exists(1L);
+        verify(mockGenreRepository).deleteById(1L);
     }
 
     @Test
     void deleteNotFound()  {
-        when(mockGenreEntityRepository.exists(1L)).thenReturn(false);
+        when(mockGenreRepository.exists(1L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> genreService.delete(1L));
 
-        verify(mockGenreEntityRepository).exists(1L);
-        verify(mockGenreEntityRepository, never()).deleteById(anyLong());
-        verify(mockMovieEntityRepository, never()).deleteConstraintByGenreId(anyLong());
+        verify(mockGenreRepository).exists(1L);
+        verify(mockGenreRepository, never()).deleteById(anyLong());
+        verify(mockMovieRepository, never()).deleteConstraintByGenreId(anyLong());
     }
 }

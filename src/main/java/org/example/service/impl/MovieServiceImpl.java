@@ -3,10 +3,10 @@ package org.example.service.impl;
 import org.example.exception.NotFoundException;
 import org.example.model.ActorEntity;
 import org.example.model.MovieEntity;
-import org.example.repository.ActorToMovieEntityRepository;
-import org.example.repository.MovieEntityRepository;
-import org.example.repository.impl.ActorToMovieEntityRepositoryImpl;
-import org.example.repository.impl.MovieEntityRepositoryImpl;
+import org.example.repository.ActorToMovieRepository;
+import org.example.repository.MovieRepository;
+import org.example.repository.impl.ActorToMovieRepositoryImpl;
+import org.example.repository.impl.MovieRepositoryImpl;
 import org.example.service.MovieService;
 import org.example.servlet.dto.ActorLimitedDto;
 import org.example.servlet.dto.MovieIncomingDto;
@@ -19,19 +19,19 @@ import org.example.servlet.mapper.impl.MovieDtoMapperImpl;
 import java.util.List;
 
 public class MovieServiceImpl implements MovieService {
-    private MovieEntityRepository movieRepository;
+    private MovieRepository movieRepository;
     private ActorDtoMapper actorDtoMapper;
     private MovieDtoMapper movieDtoMapper;
-    private ActorToMovieEntityRepository actorToMovieRepository;
+    private ActorToMovieRepository actorToMovieRepository;
 
     public MovieServiceImpl() {
-        movieRepository = new MovieEntityRepositoryImpl();
+        movieRepository = new MovieRepositoryImpl();
         actorDtoMapper = new ActorDtoMapperImpl();
         movieDtoMapper = new MovieDtoMapperImpl();
-        actorToMovieRepository = new ActorToMovieEntityRepositoryImpl();
+        actorToMovieRepository = new ActorToMovieRepositoryImpl();
     }
 
-    public MovieServiceImpl(MovieEntityRepository movieRepository, ActorDtoMapper actorDtoMapper, MovieDtoMapper movieDtoMapper, ActorToMovieEntityRepository actorToMovieRepository) {
+    public MovieServiceImpl(MovieRepository movieRepository, ActorDtoMapper actorDtoMapper, MovieDtoMapper movieDtoMapper, ActorToMovieRepository actorToMovieRepository) {
         this.movieRepository = movieRepository;
         this.actorDtoMapper = actorDtoMapper;
         this.movieDtoMapper = movieDtoMapper;

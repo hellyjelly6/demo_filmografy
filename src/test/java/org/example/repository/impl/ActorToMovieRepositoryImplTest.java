@@ -3,7 +3,7 @@ package org.example.repository.impl;
 import org.example.db.ConnectionManagerImpl;
 import org.example.model.ActorEntity;
 import org.example.model.MovieEntity;
-import org.example.repository.ActorToMovieEntityRepository;
+import org.example.repository.ActorToMovieRepository;
 import org.junit.jupiter.api.*;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -16,7 +16,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
-class ActorToMovieEntityRepositoryImplTest {
+class ActorToMovieRepositoryImplTest {
     @Container
     // Инициализируем MySQL контейнер с Testcontainers, используя данные из db.properties
     public static MySQLContainer<?> mysqlContainerDemo = new MySQLContainer<>("mysql:8.0")
@@ -25,7 +25,7 @@ class ActorToMovieEntityRepositoryImplTest {
             .withPassword("test") // Используем password из db.properties
             .withInitScript("SQL/initialization.sql"); // SQL-скрипт для инициализации данных
 
-    private ActorToMovieEntityRepository actorToMovieEntityRepository;
+    private ActorToMovieRepository actorToMovieRepository;
     private static ConnectionManagerImpl connectionManager;
 
 
@@ -36,7 +36,7 @@ class ActorToMovieEntityRepositoryImplTest {
                 mysqlContainerDemo.getPassword(),
                 mysqlContainerDemo.getDriverClassName());
         try (Connection connection = connectionManager.getConnection()) {
-            actorToMovieEntityRepository = new ActorToMovieEntityRepositoryImpl(connectionManager);
+            actorToMovieRepository = new ActorToMovieRepositoryImpl(connectionManager);
         }
     }
 
@@ -49,32 +49,32 @@ class ActorToMovieEntityRepositoryImplTest {
 
     @Test
     void deleteByMovieId() {
-        boolean deleted = actorToMovieEntityRepository.deleteByMovieId(2L);
+        boolean deleted = actorToMovieRepository.deleteByMovieId(2L);
         assertTrue(deleted);
 
-        List<ActorEntity> actors = actorToMovieEntityRepository.findActorsByMovieId(2L);
+        List<ActorEntity> actors = actorToMovieRepository.findActorsByMovieId(2L);
         assertTrue(actors.isEmpty());
     }
 
     @Test
     void deleteByActorId() {
-        boolean deleted = actorToMovieEntityRepository.deleteByActorId(3L);
+        boolean deleted = actorToMovieRepository.deleteByActorId(3L);
         assertTrue(deleted);
 
-        List<MovieEntity> movies = actorToMovieEntityRepository.findMoviesByActorId(3L);
+        List<MovieEntity> movies = actorToMovieRepository.findMoviesByActorId(3L);
         assertTrue(movies.isEmpty());
     }
 
     @Test
     void findMoviesByActorId() {
-        List<MovieEntity> moviesList = actorToMovieEntityRepository.findMoviesByActorId(4L);
+        List<MovieEntity> moviesList = actorToMovieRepository.findMoviesByActorId(4L);
         assertFalse(moviesList.isEmpty());
         assertEquals( 1, moviesList.size());
     }
 
     @Test
     void findActorsByMovieId() {
-        List<ActorEntity> actors = actorToMovieEntityRepository.findActorsByMovieId(5L);
+        List<ActorEntity> actors = actorToMovieRepository.findActorsByMovieId(5L);
         assertFalse(actors.isEmpty());
         assertEquals( 3, actors.size());
     }
@@ -86,9 +86,9 @@ class ActorToMovieEntityRepositoryImplTest {
         actorEntity.setFirstName("Киану");
         actorEntity.setLastName("Ривз");
 
-        actorToMovieEntityRepository.saveActorsToMovieByUserName(movieId, actorEntity);
+        actorToMovieRepository.saveActorsToMovieByUserName(movieId, actorEntity);
 
-        List<ActorEntity> actors = actorToMovieEntityRepository.findActorsByMovieId(movieId);
+        List<ActorEntity> actors = actorToMovieRepository.findActorsByMovieId(movieId);
 
         boolean exists = actors.stream()
                 .anyMatch(a -> a.getFirstName().equals("Киану") &&
