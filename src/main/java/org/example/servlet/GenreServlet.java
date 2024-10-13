@@ -84,7 +84,7 @@ public class GenreServlet extends HttpServlet {
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response = "Bad Request: "+e.getMessage();
+            response = "Bad Request: %s".formatted(e.getMessage());
         }
         PrintWriter printWriter = resp.getWriter();
         printWriter.print(response);

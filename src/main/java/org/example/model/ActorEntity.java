@@ -1,11 +1,10 @@
 package org.example.model;
 
-import org.example.repository.ActorToMovieEntityRepository;
-import org.example.repository.impl.ActorToMovieEntityRepositoryImpl;
 
 import java.util.ArrayList;
 import java.sql.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The actor filmed in the movie
@@ -51,4 +50,16 @@ public class ActorEntity {
         this.movies = movies != null ? movies : new ArrayList<>();
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        ActorEntity actor = (ActorEntity) obj;
+        return id == actor.id;
+    }
 }

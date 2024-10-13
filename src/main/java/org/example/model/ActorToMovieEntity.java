@@ -1,5 +1,7 @@
 package org.example.model;
 
+import java.util.Objects;
+
 /**
  * ManyToMany: ActorEntity <-> MovieEntity
  */
@@ -24,4 +26,17 @@ public class ActorToMovieEntity {
 
     public Long getActorId() {return actorId;}
     public void setActorId(Long actorId) {this.actorId = actorId;}
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        ActorToMovieEntity actorToMovie = (ActorToMovieEntity) obj;
+        return id == actorToMovie.id;
+    }
 }

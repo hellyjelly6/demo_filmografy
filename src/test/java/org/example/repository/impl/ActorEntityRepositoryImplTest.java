@@ -52,7 +52,7 @@ class ActorEntityRepositoryImplTest {
         assertEquals(1L, actorEntity.getId());
         assertEquals("Киану", actorEntity.getFirstName());
         assertEquals("Ривз", actorEntity.getLastName());
-        assertEquals(java.sql.Date.valueOf("1964-09-02").getTime(), actorEntity.getBirthDate().getTime());
+        assertEquals(java.sql.Date.valueOf("1964-09-02").toLocalDate(), actorEntity.getBirthDate().toLocalDate());
     }
 
     @Test
@@ -79,7 +79,7 @@ class ActorEntityRepositoryImplTest {
         assertNotNull(savedActorEntity.getId());
         assertEquals("New", savedActorEntity.getFirstName());
         assertEquals("Actor", savedActorEntity.getLastName());
-        assertEquals(java.sql.Date.valueOf("1965-09-12"), savedActorEntity.getBirthDate());
+        assertEquals(java.sql.Date.valueOf("1965-09-12").toLocalDate(), savedActorEntity.getBirthDate().toLocalDate());
     }
 
     @Test
@@ -95,7 +95,7 @@ class ActorEntityRepositoryImplTest {
 
         assertEquals("Эмилия", actorEntity.getFirstName());
         assertEquals("Кларк", actorEntity.getLastName());
-        assertEquals(java.sql.Date.valueOf("1999-09-12"), actorEntity.getBirthDate());
+        assertEquals(java.sql.Date.valueOf("1999-09-12").toLocalDate(), actorEntity.getBirthDate().toLocalDate());
     }
 
     @Test

@@ -57,10 +57,10 @@ class ActorServiceImplTest {
         assertEquals(2L, result.get(1).getId());
         assertEquals("Эмилия", result.get(0).getFirstName());
         assertEquals("Кларк", result.get(0).getLastName());
-        assertEquals(java.sql.Date.valueOf("1986-10-23"), result.get(0).getBirthDate());
+        assertEquals(java.sql.Date.valueOf("1986-10-23").toLocalDate(), result.get(0).getBirthDate().toLocalDate());
         assertEquals("Алфи", result.get(1).getFirstName());
         assertEquals("Аллен", result.get(1).getLastName());
-        assertEquals(java.sql.Date.valueOf("1986-09-12"), result.get(1).getBirthDate());
+        assertEquals(java.sql.Date.valueOf("1986-09-12").toLocalDate(), result.get(1).getBirthDate().toLocalDate());
 
         verify(mockActorEntityRepository).findAll();
         verify(mockActorDtoMapper).mapList(anyList());
@@ -78,7 +78,7 @@ class ActorServiceImplTest {
         assertEquals(1L, result.getId());
         assertEquals("Эмилия", result.getFirstName());
         assertEquals("Кларк", result.getLastName());
-        assertEquals(java.sql.Date.valueOf("1986-10-23"), result.getBirthDate());
+        assertEquals(java.sql.Date.valueOf("1986-10-23").toLocalDate(), result.getBirthDate().toLocalDate());
 
         verify(mockActorEntityRepository).exists(1L);
         verify(mockActorEntityRepository).findById(1L);
@@ -107,7 +107,7 @@ class ActorServiceImplTest {
         assertEquals(1L, result.getId());
         assertEquals("Эмилия", result.getFirstName());
         assertEquals("Кларк", result.getLastName());
-        assertEquals(java.sql.Date.valueOf("1986-10-23"), result.getBirthDate());
+        assertEquals(java.sql.Date.valueOf("1986-10-23").toLocalDate(), result.getBirthDate().toLocalDate());
 
         verify(mockActorDtoMapper).map(actorIncomingDto);
         verify(mockActorEntityRepository).save(actorEntity);
@@ -127,7 +127,7 @@ class ActorServiceImplTest {
         assertEquals(1L, result.getId());
         assertEquals("Эмилия", result.getFirstName());
         assertEquals("Кларк", result.getLastName());
-        assertEquals(java.sql.Date.valueOf("1986-10-23"), result.getBirthDate());
+        assertEquals(java.sql.Date.valueOf("1986-10-23").toLocalDate(), result.getBirthDate().toLocalDate());
 
         verify(mockActorEntityRepository).exists(1L);
         verify(mockActorDtoMapper).map(actorIncomingDto);

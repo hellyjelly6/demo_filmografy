@@ -3,7 +3,6 @@ package org.example.repository.impl;
 import org.example.db.ConnectionManagerImpl;
 import org.example.model.GenreEntity;
 import org.example.repository.GenreEntityRepository;
-import org.example.repository.mapper.impl.GenreResultSetMapperImpl;
 import org.junit.jupiter.api.*;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;

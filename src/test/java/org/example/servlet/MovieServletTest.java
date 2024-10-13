@@ -163,7 +163,7 @@ class MovieServletTest {
         verify(mockResponse).setStatus(HttpServletResponse.SC_BAD_REQUEST);
         writer.flush();
         String actualResponse = stringWriter.toString();
-        String expectedResponse = "Illegal Request";
+        String expectedResponse = "Illegal Request, movie is null";
 
         assertEquals(expectedResponse, actualResponse);
     }

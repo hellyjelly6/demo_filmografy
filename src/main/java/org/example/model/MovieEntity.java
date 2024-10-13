@@ -1,10 +1,9 @@
 package org.example.model;
 
-import org.example.repository.ActorToMovieEntityRepository;
-import org.example.repository.impl.ActorToMovieEntityRepositoryImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Relation:
@@ -52,5 +51,17 @@ public class MovieEntity {
         this.actors = actors != null ? actors : new ArrayList<>();
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        MovieEntity movie = (MovieEntity) obj;
+        return id == movie.id;
+    }
 }
 
